@@ -30,7 +30,7 @@ public class AnalyzeProposalUI extends AbstractUI {
         final var selectedProposal = selectProposal();
 
         if (selectedProposal == null) {
-            System.out.println("No proposal selected.");
+            System.out.println("There are no show proposals to analyze or an error occurred.");
             return false;
         }
 

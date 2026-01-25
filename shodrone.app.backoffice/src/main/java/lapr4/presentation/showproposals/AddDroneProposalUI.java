@@ -11,9 +11,7 @@ import lapr4.showproposalmanagement.dto.DroneInShowDTO;
 import lapr4.showproposalmanagement.dto.ShowProposalDTO;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @SuppressWarnings("java:S106")
 public class AddDroneProposalUI extends AbstractUI {
@@ -25,7 +23,7 @@ public class AddDroneProposalUI extends AbstractUI {
         Iterable<ShowProposalDTO> proposals = controller.listShowProposals();
 
         if (!proposals.iterator().hasNext()) {
-            System.out.println("There are no show proposals");
+            System.out.println("There are no show proposals yet.");
             return false;
         }
 

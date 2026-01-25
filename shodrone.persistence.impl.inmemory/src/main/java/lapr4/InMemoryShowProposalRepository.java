@@ -56,6 +56,17 @@ public class InMemoryShowProposalRepository extends InMemoryDomainRepository<Sho
     }
 
     @Override
+    public Iterable<ShowProposal> findShowsCRMCollaboratorAccepted() {
+        List<ShowProposal> acceptedShows = new ArrayList<>();
+        for (ShowProposal proposal : findAll()) {
+            if (proposal.state() == ShowProposalState.ACCEPTED) {
+                acceptedShows.add(proposal);
+            }
+        }
+        return acceptedShows;
+    }
+
+    @Override
     public Iterable<ShowProposal> findProposalsAcceptedStateByCustomer(Customer customer) {
         List<ShowProposal> acceptedProposals = new ArrayList<>();
         for (ShowProposal proposal : findAll()) {

@@ -43,6 +43,14 @@ class JpaShowProposalRepository extends ShodroneJpaRepositoryBase<ShowProposal, 
     }
 
     @Override
+    public Iterable<ShowProposal> findShowsCRMCollaboratorAccepted() {
+        return entityManager()
+                .createQuery("SELECT p FROM ShowProposal p WHERE p.state = :state", ShowProposal.class)
+                .setParameter("state", ShowProposalState.ACCEPTED)
+                .getResultList();
+    }
+
+    @Override
     public Iterable<ShowProposal> findProposalsAcceptedStateByCustomer(Customer customer) {
         return entityManager()
                 .createQuery("""

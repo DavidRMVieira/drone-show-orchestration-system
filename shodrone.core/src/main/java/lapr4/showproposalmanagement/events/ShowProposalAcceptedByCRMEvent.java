@@ -1,6 +1,5 @@
 package lapr4.showproposalmanagement.events;
 
-import eapli.framework.infrastructure.authz.domain.model.Name;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;

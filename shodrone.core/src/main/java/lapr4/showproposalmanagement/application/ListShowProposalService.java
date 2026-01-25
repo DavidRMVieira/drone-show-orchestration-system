@@ -36,6 +36,11 @@ public class ListShowProposalService {
         return ShowProposalDTOParser.transformToDTO(proposals);
     }
 
+    public Iterable<ShowProposalDTO> allShowsCRMCollaboratorAccepted() {
+        final Iterable<ShowProposal> proposals = repository.findShowsCRMCollaboratorAccepted();
+        return ShowProposalDTOParser.transformToDTO(proposals);
+    }
+
     public Iterable<ShowProposalDTO> allShowsByCustomer(Customer customer) {
         final Iterable<ShowProposal> proposals = repository.findProposalsAcceptedStateByCustomer(customer);
         return ShowProposalDTOParser.transformToDTO(proposals);

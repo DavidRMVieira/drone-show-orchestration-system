@@ -54,8 +54,6 @@ activate UI
     UI --> Actor: Show list of show proposals
     Actor --> UI: Select show proposal
 
-    UI --> Actor : Show list of drones
-
         UI -> Controller: listDroneModels()
         activate Controller
 
@@ -80,6 +78,7 @@ activate UI
         Controller --> UI: droneModelsDTO
         deactivate Controller
 
+    UI --> Actor : Show list of drones
     Actor -> UI : Select drone
 
     UI --> Actor: Request quantity

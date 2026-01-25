@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration scan="true" scanPeriod="3 seconds">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %logger{32} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ERROUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{32} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="OFF">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <root level="OFF">
+        <appender-ref ref="ERROUT"/>
+    </root>
+
+    <logger name="lapr4.app.testing.console.ShodroneTestingApp" level="DEBUG" additivity="false">
+        <appender-ref ref="ERROUT"/>
+    </logger>
+
+    <logger name="presentation.lapr4.app.testing.console.AnalyzeProposalUI" level="DEBUG" additivity="false">
+        <appender-ref ref="ERROUT"/>
+    </logger>
+
+    <logger name="presentation.lapr4.app.testing.console.EvaluateProposalUI" level="DEBUG" additivity="false">
+        <appender-ref ref="ERROUT"/>
+    </logger>
+
+    <logger name="presentation.lapr4.app.testing.console.GetShowInfoUI" level="DEBUG" additivity="false">
+        <appender-ref ref="ERROUT"/>
+    </logger>
+
+    <logger name="presentation.lapr4.app.testing.console.ListScheduledShowsUI" level="DEBUG" additivity="false">
+        <appender-ref ref="ERROUT"/>
+    </logger>
+
+    <logger name="lapr4.testingshow.csvprotocol.client.CsvSimulatorProtocolProxy" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+</configuration>

@@ -137,8 +137,8 @@ public class CsvCASProtocolProxy {
 
 		socket.stop();
 
-		final CsvServerResponseParser mu = new CsvServerResponseParser();
-		return mu.parseResponseMessageListCustomerShowProposals(response);
+		final CsvServerResponseParser srp = new CsvServerResponseParser();
+		return srp.parseResponseMessageListCustomerShowProposals(response);
 	}
 
 	/**
@@ -161,8 +161,8 @@ public class CsvCASProtocolProxy {
 
 		socket.stop();
 
-		final CsvServerResponseParser mu = new CsvServerResponseParser();
-		return mu.parseResponseMessageAcceptProposal(response);
+		final CsvServerResponseParser srp = new CsvServerResponseParser();
+		return srp.parseResponseMessageAcceptProposal(response);
 	}
 
 	/**
@@ -185,8 +185,8 @@ public class CsvCASProtocolProxy {
 
 		socket.stop();
 
-		final CsvServerResponseParser mu = new CsvServerResponseParser();
-		return mu.parseResponseMessageRejectProposal(response);
+		final CsvServerResponseParser srp = new CsvServerResponseParser();
+		return srp.parseResponseMessageRejectProposal(response);
 	}
 
 	/**
@@ -209,12 +209,12 @@ public class CsvCASProtocolProxy {
 
 		socket.stop();
 
-		final CsvServerResponseParser mu = new CsvServerResponseParser();
-		return mu.parseResponseMessageListCustomerShowProposals(response);
+		final CsvServerResponseParser srp = new CsvServerResponseParser();
+		return srp.parseResponseMessageListCustomerShowProposals(response);
 	}
 
 	/**
-	 * Lists the show proposals made by a customer.
+	 * Lists show proposals made by a customer.
 	 *
 	 * @return Iterable of ShowProposalDTO
 	 *
@@ -233,8 +233,8 @@ public class CsvCASProtocolProxy {
 
 		socket.stop();
 
-		final CsvServerResponseParser mu = new CsvServerResponseParser();
-		return mu.parseResponseMessageListCustomerShowProposals(response);
+		final CsvServerResponseParser srp = new CsvServerResponseParser();
+		return srp.parseResponseMessageListCustomerShowProposals(response);
 	}
 
 

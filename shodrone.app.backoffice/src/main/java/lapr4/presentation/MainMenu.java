@@ -262,7 +262,7 @@ public class MainMenu extends AbstractUI {
 
         if (authz.isAuthenticatedUserAuthorizedTo(ShodroneRoles.POWER_USER, ShodroneRoles.CRM_COLLABORATOR)) {
             menu.addItem(CREATE_SHOW_PROPOSAL_OPTION, "Create Show Proposal", new CreateShowProposalAction());
-            menu.addItem(ADD_DRONE_PROPOSAL_OPTION, "Add Drone Proposal", new AddDroneProposalAction());
+            menu.addItem(ADD_DRONE_PROPOSAL_OPTION, "Add Drones to a Show Proposal", new AddDroneProposalAction());
             menu.addItem(ADD_FIGURE_PROPOSAL_OPTION, "Add Figure Proposal", new AddFigureProposalAction());
             menu.addItem(ADD_VIDEO_PROPOSAL_OPTION, "Add Video Simulation Proposal", new AddVideoSimulationProposalAction());
             menu.addItem(SEND_PROPOSAL_OPTION, "Send Show Proposal", new SendProposalAction());

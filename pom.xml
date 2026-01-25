@@ -9,6 +9,7 @@
     <modules>
         <module>shodrone.app.backoffice</module>
         <module>shodrone.app.customer</module>
+        <module>shodrone.app.testing</module>
         <module>shodrone.app.bootstrap</module>
         <module>shodrone.app.common</module>
         <module>shodrone.core</module>
@@ -43,11 +44,13 @@
             <artifactId>eapli.framework.core</artifactId>
             <version>${eapli.framework.core.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.bitbucket.pag_isep.eapliframework</groupId>
             <artifactId>eapli.framework.infrastructure.authz</artifactId>
             <version>${eapli.framework.authz.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.bitbucket.pag_isep.eapliframework</groupId>
             <artifactId>eapli.framework.infrastructure.pubsub</artifactId>

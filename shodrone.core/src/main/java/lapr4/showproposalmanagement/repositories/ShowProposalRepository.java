@@ -11,6 +11,8 @@ public interface ShowProposalRepository extends DomainRepository<Long, ShowPropo
 
     Iterable<ShowProposal> findProposalsCustomerAccepted();
 
+    Iterable<ShowProposal> findShowsCRMCollaboratorAccepted();
+
     Iterable<ShowProposal> findProposalsAcceptedStateByCustomer(Customer customer);
 
     Iterable<ShowProposal> findFutureDateAcceptedProposalsByCustomer(Customer customer);

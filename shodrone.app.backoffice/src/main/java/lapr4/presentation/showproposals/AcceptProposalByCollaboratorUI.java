@@ -28,7 +28,7 @@ public class AcceptProposalByCollaboratorUI extends AbstractUI {
         System.out.println("\n=== Show Proposal Accepted By Customer ===\n");
         System.out.println(selectedProposal.document());
 
-        String option = Console.readLine("Accept (A)? ").toUpperCase();
+        String option = Console.readLine("Accept (A) or Reject (R)? ").toUpperCase();
 
         if (option.equals("A")) {
             controller.acceptProposalByCollaborator(selectedProposal);

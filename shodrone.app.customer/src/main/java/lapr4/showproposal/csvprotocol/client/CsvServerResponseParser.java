@@ -83,7 +83,7 @@ class CsvServerResponseParser {
     }
 
     /**
-     * Cria um ficheiro localmente com o conteúdo do documento e retorna o path local.
+     * Creates a local file with the document content and returns the local path.
      */
     private String createDocumentFileAndGetLink(long proposalId, String documentContent) {
         if (documentContent == null || documentContent.equals("N/A")) {
