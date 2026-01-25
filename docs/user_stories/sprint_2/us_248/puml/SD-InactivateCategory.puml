@@ -1,0 +1,91 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "Show Designer" as Actor
+participant InactivateFigureCategoryUI as UI <<presentation>>
+participant InactivateFigureCategoryController as Controller <<application>>
+participant ListFigureCategoryService as svc <<application>>
+participant FigureCategoryDTOParser as Parser <<application>>
+participant FigureCategoryDTO as Dto <<dto>>
+participant FigureCategory as Domain <<domain>>
+database FigureCategoryRepository as Repo <<repository>>
+
+Actor --> UI: Inactivate Figure Category
+activate UI
+
+    UI -> Controller: activeFigureCategories()
+    activate Controller
+
+    note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+        Controller -> svc: allActiveFigureCategories()
+        activate svc
+
+            note right of svc : Simplified persistence\n(see specific diagram)
+
+                    svc -> Repo : findAllActive()
+                    activate Repo
+
+                    Repo --> svc : activeCategories
+                    deactivate Repo
+
+                    svc -> Parser : transformToDTO(activeCategories)
+                    activate Parser
+
+                    Parser --> svc : activeCategoriesDTO
+                    deactivate Parser
+
+        svc --> Controller: activeCategoriesDTO
+        deactivate svc
+
+    Controller --> UI: activeCategoriesDTO
+    deactivate Controller
+
+    UI --> Actor: Show Active Categories
+
+    Actor --> UI: Select Category
+
+        UI -> Controller: inactivateFigureCategory(categoryDTO)
+        activate Controller
+
+            Controller -> Parser: valueOf(categoryDTO)
+            activate Parser
+
+                    Parser -> Dto: getName()
+                    activate Dto
+
+                    Dto --> Parser: categoryName
+                    deactivate Dto
+
+                    Parser -> Repo: ofIdentity(categoryName)
+                    activate Repo
+
+                    Repo --> Parser: category
+                    deactivate Repo
+
+            Parser --> Controller: category
+            deactivate Parser
+
+            Controller -> Domain: inactivate
+            activate Domain
+
+            Domain --> Controller: void
+            deactivate Domain
+
+            Controller -> Domain: toDTO()
+            activate Domain
+
+            Domain --> Controller: categoryDTO
+            deactivate Domain
+
+        Controller --> UI: categoryDTO
+        deactivate Controller
+
+    UI --> Actor: Display Category Info or error
+
+deactivate UI
+@enduml

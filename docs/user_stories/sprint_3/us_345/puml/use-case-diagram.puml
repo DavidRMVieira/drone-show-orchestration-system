@@ -1,0 +1,9 @@
+@startuml
+!define RECTANGLE class
+
+actor "Drone Tech" as USER
+usecase "Register Drone Language Plugin" as UC
+
+USER --> UC
+
+@enduml

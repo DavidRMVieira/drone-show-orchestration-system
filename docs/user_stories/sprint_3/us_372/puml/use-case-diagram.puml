@@ -1,0 +1,9 @@
+@startuml
+!define RECTANGLE class
+
+actor "Representative" as USER
+usecase "Check shows dates" as UC
+
+USER --> UC
+
+@enduml

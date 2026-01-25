@@ -1,0 +1,41 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "Drone Tech" as Actor
+participant RegisterDroneLanguagePluginUI as UI <<presentation>>
+participant RegisterDroneLanguagePluginController as Controller <<application>>
+participant DroneLanguagePlugin as Domain <<domain>>
+database DroneLanguagePluginRepository as Repository <<repository>>
+
+Actor --> UI: Register Drone Language Plugin
+activate UI
+
+UI --> Actor: Request Drone Language and Class Name
+Actor --> UI: Provide Drone Language and Class Name
+
+    UI -> Controller: registerDroneLanguagePlugin(droneLanguage, className)
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+        note right of Controller : Simplified persistence\n(see specific diagram)
+
+        Controller -> Domain: create(droneLanguage, className)
+
+        Controller -> Repository: save(DroneLanguagePlugin)
+        activate Repository
+
+        Repository --> Controller: DroneLanguagePlugin
+        deactivate Repository
+
+        Controller --> UI: DroneLanguagePlugin
+    deactivate Controller
+
+UI --> Actor: Display plugin info or error
+deactivate UI
+
+@enduml

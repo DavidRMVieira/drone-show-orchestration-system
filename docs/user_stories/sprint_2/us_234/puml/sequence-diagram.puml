@@ -1,0 +1,64 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "CRM Manager" as Actor
+participant DecommissionFigureCatalogueUI as UI <<presentation>>
+participant DecommissionFigureCatalogueController as Controller <<application>>
+participant FigureDTOParser as DtoParser <<application>>
+participant Figure as Figure <<domain>>
+database Catalogue as Repository <<repository>>
+
+Actor --> UI: Decommission Figure
+activate UI
+    UI -> Controller: create
+
+    UI -> Controller : allFigures()
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+        note right of Controller : Simplified persistence\n(see specific diagram)
+
+        Controller -> Repository : findAll()
+        activate Repository
+
+        Repository -> Controller : figures
+        deactivate Repository
+
+        Controller -> DtoParser : transformToDTO(figures)
+        activate DtoParser
+
+        DtoParser -> Controller : figuresDTO
+        deactivate DtoParser
+
+    Controller -> UI : figuresDTO
+    deactivate Controller
+
+        UI -> Controller : decommissionFigure()
+        activate Controller
+
+            Controller -> DtoParser : valueOf(figureDto)
+            activate DtoParser
+
+            DtoParser --> Controller : figure
+            deactivate DtoParser
+
+            Controller -> Figure : decommission()
+
+            Controller -> Repository : save(figure)
+            activate Repository
+
+            Repository --> Controller : figure
+            deactivate Repository
+
+
+        Controller --> UI
+        deactivate Controller
+
+UI --> Actor: Show success or error message
+deactivate UI
+@enduml

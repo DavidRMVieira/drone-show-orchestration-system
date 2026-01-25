@@ -1,0 +1,19 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Check shows dates
+
+actor "Representative" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Request list of scheduled shows
+activate System
+
+System --> USER : Display list of scheduled shows
+deactivate System
+
+@enduml

@@ -1,0 +1,50 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+    package "<<aggregate>> SystemUser" {
+
+        class SystemUser <<entity>> <<root>> {
+        }
+
+        class Username <<value object>> <<id>> {
+        }
+
+        class UserSession <<value object>> {
+        }
+
+        class Password <<value object>> {
+        }
+
+        class Name <<value object>> {
+        }
+
+        class EmailAddress <<value object>> {
+        }
+
+        class RoleSet {
+        }
+
+        interface Set <<interface>> {
+        }
+
+        class RoleAssigment <<entity>> {
+        }
+
+        class Role <<value object>> {
+        }
+
+    }
+
+UserSession --> SystemUser
+SystemUser --> Username
+SystemUser --> Password
+SystemUser --> Name
+SystemUser --> EmailAddress
+SystemUser --> RoleSet
+RoleSet ..|> Set
+Set ..> RoleAssigment
+RoleAssigment --> Role
+
+@enduml

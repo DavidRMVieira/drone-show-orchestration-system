@@ -1,0 +1,31 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Register User
+
+actor "Admin" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Register User
+activate System
+
+System --> USER : Ask user information
+deactivate System
+
+USER -> System : Email, Password, First Name, \nLast Name, Phone Number
+activate System
+
+System --> USER : Show List of Role Types
+deactivate System
+
+USER -> System : Role Type
+activate System
+
+System --> USER : Display User Info or error
+deactivate System
+
+@enduml

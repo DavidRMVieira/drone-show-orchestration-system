@@ -1,0 +1,10 @@
+@startuml
+!define RECTANGLE class
+
+actor "Customer" as USER
+
+usecase "Edit Show Request" as UC
+
+USER --> UC
+
+@enduml

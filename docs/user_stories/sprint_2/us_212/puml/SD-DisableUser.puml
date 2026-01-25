@@ -1,0 +1,80 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor Admin as Actor
+participant DisableUserUI as UI <<presentation>>
+participant DisableUserController as Controller <<application>>
+participant AuthzRegistry as Registry <<utility>>
+participant "userSvc:UserManagementService" as userSvc <<application>>
+participant ShodroneUserDTOParser as shoDtoParser <<application>>
+participant "shodroneUser:ShodroneUser" as Domain <<domain>>
+participant "shodroneUserDTO:ShodroneUserDTO" as DTO <<dto>>
+database ShodroneUserRepository as Repository <<repository>>
+
+Actor --> UI: Disable User
+activate UI
+    UI -> Controller: create
+
+        UI -> Controller : activeUsers()
+        activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            note right of Controller : Simplified persistence\n(see specific diagram)
+
+            Controller -> Repository : findAllActive()
+            activate Repository
+
+            Repository --> Controller : activeUsers
+            deactivate Repository
+
+            Controller -> shoDtoParser : transformToDTO(activeUsers)
+            activate shoDtoParser
+
+            shoDtoParser --> Controller : activeUsersDTO
+            deactivate shoDtoParser
+
+        Controller --> UI : activeUsersDTO
+        deactivate Controller
+
+UI --> Actor: Show Active Users
+Actor --> UI: Select User
+
+    UI -> Controller: disableUser(shodroneUserDTO)
+    activate Controller
+
+        Controller -> Registry : userService()
+        activate Registry
+        Registry --> Controller : userSvc
+        deactivate Registry
+
+        Controller -> shoDtoParser : valueOf(shodroneUserDTO)
+        activate shoDtoParser
+
+        shoDtoParser --> Controller : shodroneUser
+        deactivate shoDtoParser
+
+        Controller -> Domain : user()
+        activate Domain
+
+        Domain --> Controller : systemUser
+        deactivate Domain
+
+        Controller -> userSvc: deactivateUser(systemUser)
+        activate userSvc
+
+        note right of userSvc : Framework implementation
+
+        userSvc --> Controller : systemUser
+        deactivate userSvc
+
+        Controller->UI: systemUser
+    deactivate Controller
+
+        UI-->Actor: Display User Info or error
+deactivate UI
+@enduml

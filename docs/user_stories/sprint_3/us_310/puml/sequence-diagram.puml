@@ -1,0 +1,188 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "CRM Collaborator" as Actor
+participant CreateShowProposalUI as UI <<presentation>>
+participant CreateShowProposalController as Controller <<application>>
+participant ShowRequestDTOParser as requestParser <<application>>
+participant RepresentativeDTOParser as representativeParser <<application>>
+participant ShowProposalBuilder as Builder <<builder>>
+participant ShowProposal as Domain <<domain>>
+participant ShowRequestDTO as requestDTO <<dto>>
+participant RepresentativeDTO as representativeDTO <<dto>>
+database ShowProposalRepository as Repository <<repository>>
+database ShowRequestRepository as showRequestRepository <<repository>>
+database RepresentativeRepository as representativeRepository <<repository>>
+
+Actor --> UI: Create Show Proposal
+activate UI
+
+    UI -> Controller: listShowRequests()
+    activate Controller
+
+    note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+    note right of Controller : Simplified persistence\n(see specific diagram)
+
+                    Controller -> showRequestRepository : findAll()
+                    activate showRequestRepository
+
+                    showRequestRepository --> Controller : requests
+                    deactivate showRequestRepository
+
+                    Controller -> requestParser : transformToDTO(requests)
+                    activate requestParser
+
+                    requestParser --> Controller : requestsDTO
+                    deactivate requestParser
+
+    Controller --> UI: requestsDTO
+    deactivate Controller
+
+    UI --> Actor: Show list of show requests
+    Actor --> UI: Select show request
+
+    UI --> Actor : Ask if proposal is exclusive to a representative
+
+    Actor -> UI : Answer (Yes or No)
+
+    alt Proposal is exclusive
+    UI --> Actor : Show list of customer representatives
+
+        UI -> Controller: listCustomerRepresentatives(selectedRequestDTO)
+        activate Controller
+
+        Controller -> requestParser: valueOf(selectedRequestDTO)
+        activate requestParser
+
+        requestParser -> requestDTO: getId()
+        activate requestDTO
+
+        requestDTO --> requestParser: requestId
+        deactivate requestDTO
+
+        requestParser -> showRequestRepository: ofIdentity(requestId)
+        activate showRequestRepository
+
+        showRequestRepository --> requestParser: request
+        deactivate showRequestRepository
+
+        requestParser --> Controller: request
+        deactivate requestParser
+
+                        Controller -> Domain : customer()
+                        activate Domain
+
+                        Domain --> Controller : customer
+                        deactivate Domain
+
+                        Controller -> representativeRepository : findAllByCustomer(customer)
+                        activate representativeRepository
+
+                        representativeRepository --> Controller : customerRepresentatives
+                        deactivate representativeRepository
+
+                        Controller -> representativeParser : transformToDTO(customerRepresentatives)
+                        activate representativeParser
+
+                        representativeParser --> Controller : customerRepresentativesDTO
+                        deactivate representativeParser
+
+        Controller --> UI: customerRepresentativesDTO
+        deactivate Controller
+
+    Actor -> UI : Select representative
+    end
+
+    UI --> Actor: Request location, date, duration, number of drones, language and insurance amount
+    Actor --> UI: Provide location, date, duration, number of drones, language and insurance amount
+
+    UI -> Controller: createShowProposal(proposalDTO, selectedRequestDTO, selectedRepresentativeDTO)
+    activate Controller
+
+        Controller -> requestParser: valueOf(selectedRequestDTO)
+        activate requestParser
+
+        requestParser -> requestDTO: getId()
+        activate requestDTO
+
+        requestDTO --> requestParser: requestId
+        deactivate requestDTO
+
+        requestParser -> showRequestRepository: ofIdentity(requestId)
+        activate showRequestRepository
+
+        showRequestRepository --> requestParser: request
+        deactivate showRequestRepository
+
+        requestParser --> Controller: request
+        deactivate requestParser
+
+        Controller -> Builder : create()
+
+        note right of Controller : Information is obtained by proposalDTO received by parameter
+
+        Controller -> Builder : withDate(date)
+        Controller -> Builder : withDuration(duration)
+        Controller -> Builder : withLocation(location)
+        Controller -> Builder : withNumberOfDrones(numberOfDrones)
+        Controller -> Builder : withLanguage(language)
+        Controller -> Builder : withInsuranceAmount(insuranceAmount)
+        Controller -> Builder : withState(PENDING)
+        Controller -> Builder : withShowRequest(request)
+
+        alt selectedRepresentativeDTO != null
+
+        Controller -> representativeParser: valueOf(selectedRepresentativeDTO)
+        activate representativeParser
+
+        representativeParser -> representativeDTO: getEmail()
+        activate representativeDTO
+
+        representativeDTO --> representativeParser: representativeEmail
+        deactivate representativeDTO
+
+        representativeParser -> representativeRepository: ofIdentity(representativeEmail)
+        activate representativeRepository
+
+        representativeRepository --> representativeParser: representative
+        deactivate representativeRepository
+
+        representativeParser --> Controller: representative
+        deactivate representativeParser
+
+        Controller -> Builder : withRepresentative(representative)
+
+        end
+
+        Controller -> Builder : build()
+        activate Builder
+
+            Builder -> Domain: create()
+
+        Builder --> Controller : proposal
+        deactivate Builder
+
+        Controller -> Repository: save(proposal)
+        activate Repository
+
+        Repository --> Controller: proposal
+        deactivate Repository
+
+        Controller -> Domain: toDTO()
+        activate Domain
+
+        Domain --> Controller: proposalDTO
+        deactivate Domain
+
+        Controller --> UI: proposalDTO
+    deactivate Controller
+
+UI --> Actor: Display show proposal info or error
+deactivate UI
+
+@enduml

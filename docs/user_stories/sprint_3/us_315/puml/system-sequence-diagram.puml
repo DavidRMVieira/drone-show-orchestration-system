@@ -1,0 +1,31 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Add Video Simulation Proposal
+
+actor "CRM Collaborator" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Add Video Simulation Proposal
+activate System
+
+System --> USER : Show list of show proposals
+deactivate System
+
+USER -> System : Select show proposal
+activate System
+
+System --> USER : Request video simulation link
+deactivate System
+
+USER -> System : Provide video simulation link
+activate System
+
+System --> USER : Display success or error message
+deactivate System
+
+@enduml

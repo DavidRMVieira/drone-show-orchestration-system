@@ -1,0 +1,87 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+title Sequence Diagram (SD) - Analyze a Show Proposal
+
+actor "Representative" as Actor
+participant "AnalyzeProposalUI" as UI <<presentation>>
+participant AnalyzeProposalProxyController as serverController <<server>>
+participant CsvCASProtocolProxy as Proxy <<server>>
+participant ProposalsForACustomerController as Controller <<application>>
+participant ListShowProposalService as proposalSvc <<application>>
+participant AuthorizationService as authSvc <<application>>
+participant ShowProposalDTOParser as proposalParser <<application>>
+database ShowProposalRepository as Repository <<repository>>
+database RepresentativeRepository as representativeRepository <<repository>>
+
+Actor --> UI: Request access to received show proposals
+activate UI
+
+UI -> serverController: listCustomerShowProposals(username, password)
+activate serverController
+
+serverController -> Proxy: listCustomerShowProposals(username, password)
+activate Proxy
+
+note right of Proxy : Simplifying the customer app server process
+
+Proxy -> Controller: checkPendingProposal()
+activate Controller
+
+    note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+    note right of Controller : Simplified persistence\n(see specific diagram)
+
+        Controller -> authSvc : authenticatedUser()
+        activate authSvc
+
+        authSvc --> Controller : currentUser
+        deactivate authSvc
+
+        Controller -> representativeRepository : findByUser(currentUser)
+        activate representativeRepository
+
+        representativeRepository --> Controller : currentRepresentative
+        deactivate representativeRepository
+
+        Controller -> proposalSvc : allProposalsAwaitingResponseByRepresentativeOrCustomer(currentRepresentative)
+        activate proposalSvc
+
+                    proposalSvc -> Repository : findProposalsAwaitingResponseByRepresentativeOrCustomer(currentRepresentative)
+                    activate Repository
+
+                    Repository --> proposalSvc : proposals
+                    deactivate Repository
+
+                    proposalSvc -> proposalParser : transformToDTO(proposals)
+                    activate proposalParser
+
+                    proposalParser --> proposalSvc : proposalsDTO
+                    deactivate proposalParser
+
+        proposalSvc --> Controller : proposalsDTO
+        deactivate proposalSvc
+
+Controller --> Proxy: showProposalsDTO
+deactivate Controller
+
+Proxy --> serverController: showProposalsDTO
+deactivate Proxy
+
+serverController --> UI: showProposalsDTO
+deactivate serverController
+
+UI --> Actor: Shows list of proposals
+deactivate UI
+
+Actor --> UI: Selects a proposal
+activate UI
+
+UI --> Actor: Shows proposal file or error message
+deactivate UI
+
+@enduml

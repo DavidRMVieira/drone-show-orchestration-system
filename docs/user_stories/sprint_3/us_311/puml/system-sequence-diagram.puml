@@ -1,0 +1,37 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Add Drone Proposal
+
+actor "CRM Collaborator" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Add Drone Proposal
+activate System
+
+System --> USER : Show list of show proposals
+deactivate System
+
+USER -> System : Select show proposal
+activate System
+
+System --> USER : Show list of drones
+deactivate System
+
+USER -> System : Select drone
+activate System
+
+System --> USER : Request quantity
+deactivate System
+
+USER -> System : Provide quantity
+activate System
+
+System --> USER : Display success or error message
+deactivate System
+
+@enduml

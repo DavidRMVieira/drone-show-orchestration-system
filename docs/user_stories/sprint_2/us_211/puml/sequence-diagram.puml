@@ -1,0 +1,74 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor Admin as Actor
+participant AddUserUI as UI <<presentation>>
+participant AddUserController as Controller <<application>>
+participant ShodroneUserService as shoSvc <<application>>
+participant AuthzRegistry as Registry <<utility>>
+participant "userSvc:UserManagementService" as userSvc <<application>>
+participant "ShodroneRoles" as Roles <<domain>>
+participant "user:ShodroneUser" as Domain <<domain>>
+database ShodroneUserRepository as Repository <<repository>>
+
+Actor --> UI: Register User
+activate UI
+    UI -> Controller: create
+    UI --> Actor: Ask user information
+    Actor --> UI: Email, Password,\nFirst Name, Last Name,\nPhone Number
+
+        UI -> Controller : roleTypes()
+        activate Controller
+
+            Controller -> Roles : allRoles()
+            activate Roles
+
+            Roles --> Controller : roleTypes
+            deactivate Roles
+
+        Controller --> UI : roleTypes
+        deactivate Controller
+
+    UI --> Actor: Show List\nof Role Types
+    Actor --> UI: Role Type
+
+    UI -> Controller: addUser(email, password, \nfirstName, lastName, \nphoneNumber, roles)
+    activate Controller
+
+        Controller -> shoSvc: create
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+        Controller -> shoSvc: createShodroneUser(email, password, \nfirstName, lastName, phoneNumber, roles)
+        activate shoSvc
+
+            shoSvc -> Registry : userService()
+            activate Registry
+            Registry --> shoSvc : userSvc
+            deactivate Registry
+
+            shoSvc -> userSvc: registerNewUser(email, password, \nfirstName, lastName, phoneNumber, \nroles, currentTime)
+            activate userSvc
+            note right of userSvc : Framework implementation
+
+            userSvc --> shoSvc : systemUser
+            deactivate userSvc
+
+            shoSvc -> Domain : create(systemUser, email, phoneNumber)
+
+            note right of shoSvc : Simplified persistence\n(see specific diagram)
+            shoSvc -> Repository: save(user)
+
+        shoSvc --> Controller : user
+        deactivate shoSvc
+
+        Controller->UI: user
+    deactivate Controller
+
+        UI-->Actor: Display User Info or error
+deactivate UI
+@enduml

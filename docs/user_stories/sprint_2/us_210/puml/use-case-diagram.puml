@@ -1,0 +1,16 @@
+@startuml
+!define RECTANGLE class
+
+actor "User" as USER
+
+usecase "Login" as UC_Login
+usecase "Logout" as UC_Logout
+usecase "Change Password" as UC_ChangePassword
+usecase "Authorize Access" as UC_Authorize
+
+USER --> UC_Login
+USER --> UC_Logout
+USER --> UC_ChangePassword
+UC_Login --> UC_Authorize : include
+
+@enduml

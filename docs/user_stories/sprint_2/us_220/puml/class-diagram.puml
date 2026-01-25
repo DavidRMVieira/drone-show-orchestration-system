@@ -1,0 +1,174 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class RegisterCustomerUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class RegisterCustomerController <<application>> {
+        +registerCustomer(customerVatNumber, customerFirstName, customerLastName, street, city, postalCode, country, \ncustomerType, representativeFirstName, representativeLastName, representativeEmail, representativePhoneNumber, \nrepresentativePosition, representativeShodroneEmail, representativePassword) : CustomerDTO
+    }
+
+    class RegisterCustomerService <<application>> {
+        +registerCustomer(customerVatNumber, customerFirstName, customerLastName, street, city, postalCode, country, \ncustomerType, representativeFirstName, representativeLastName, representativeEmail, representativePhoneNumber, \nrepresentativePosition, representativeShodroneEmail, representativePassword) : CustomerDTO
+    }
+
+    class ShodroneUserService <<application>> {
+        +createShodroneUser(representativeShodroneEmail, representativePassword, \nrepresentativeFirstName, representativeLastName, representativePhoneNumber, roles) : ShodroneUser
+    }
+}
+
+package "DTO" {
+    class CustomerDTO <<dto>> {
+    }
+}
+
+package "Domain" {
+
+    package "<<aggregate>> Customer" {
+        class Customer <<entity>> <<root>> {
+        }
+
+        class VAT <<value object>> <<id>> {
+        }
+
+        class Name <<value object>> {
+        }
+
+        class Address <<value object>> {
+        }
+
+        enum CustomerState <<value object>> {
+        }
+
+        enum CustomerType <<value object>> {
+        }
+
+        Customer --> VAT
+        Customer --> Name
+        Customer --> CustomerState
+        Customer --> CustomerType
+        Customer --> Address
+    }
+
+    package "<<aggregate>> Representative" {
+        class Representative <<entity>> <<root>> {
+        }
+
+        class EmailAddress <<value object>> <<id>> {
+        }
+
+        class Position <<value object>> {
+        }
+
+        Representative --> EmailAddress
+        Representative --> Position
+    }
+
+    package "<<aggregate>> ShodroneUser" {
+        class ShodroneUser <<entity>> <<root>> {
+        }
+
+        class ShodroneEmail <<value object>> <<id>> {
+        }
+
+        class PhoneNumber <<value object>> {
+        }
+
+        ShodroneUser --> ShodroneEmail
+        ShodroneUser --> PhoneNumber
+    }
+
+    package "<<aggregate>> SystemUser" {
+        class SystemUser <<entity>> <<root>> {
+        }
+
+        class Username <<value object>> <<id>> {
+        }
+
+        class Password <<value object>> {
+        }
+
+        class Name <<value object>> {
+        }
+
+        class EmailAddress <<value object>> {
+        }
+
+        class RoleSet {
+        }
+
+        interface Set <<interface>> {
+        }
+
+        class RoleAssigment <<entity>> {
+        }
+
+        class Role <<value object>> {
+        }
+
+        SystemUser --> Username
+        SystemUser --> Password
+        SystemUser --> Name
+        SystemUser --> EmailAddress
+        SystemUser --> RoleSet
+        RoleSet ..|> Set
+        Set ..> RoleAssigment
+        RoleAssigment --> Role
+    }
+}
+
+package "Persistence" {
+    class PersistenceContext <<persistence>> {
+        +repositories() : RepositoryFactory
+    }
+
+    class RepositoryFactory <<persistence>> {
+        +newTransactionalContext() : TransactionalContext
+    }
+
+    class TransactionalContext <<repository>> {
+        +beginTransaction() : void
+        +commit() : void
+    }
+
+    class CustomerRepository <<repository>> {
+        +save(customer) : Customer
+    }
+
+    class RepresentativeRepository <<repository>> {
+        +save(representative) : Representative
+    }
+
+    class ShodroneUserRepository <<repository>> {
+        +save(user) : ShodroneUser
+    }
+}
+
+RegisterCustomerUI --> RegisterCustomerController
+RegisterCustomerController --> RegisterCustomerService : svc
+RegisterCustomerService --> ShodroneUserService : userSvc
+
+RegisterCustomerService --> Customer : customer
+RegisterCustomerService --> Representative : representative
+RegisterCustomerService ..> ShodroneUser : user
+RegisterCustomerService --> CustomerRepository : customerRepo
+RegisterCustomerService --> RepresentativeRepository : representativeRepo
+RegisterCustomerService ..> PersistenceContext
+RegisterCustomerService ..> TransactionalContext : txCtx
+RegisterCustomerService ..> CustomerDTO : customerDTO
+
+ShodroneUserService --> ShodroneUser : user
+ShodroneUserService --> ShodroneUserRepository : repo
+
+PersistenceContext ..> RepositoryFactory
+RepositoryFactory ..> TransactionalContext
+
+ShodroneUser --> SystemUser : has
+Representative "*" --> Customer : represents
+Representative --> ShodroneUser : is a
+
+@enduml

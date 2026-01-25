@@ -1,0 +1,10 @@
+@startuml
+!define RECTANGLE class
+
+actor "Admin" as USER
+
+usecase "Register user" as UC
+
+USER --> UC
+
+@enduml

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration scan="true" scanPeriod="3 seconds">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %logger{1} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ERROUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{32} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="OFF">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <root level="OFF">
+        <appender-ref ref="ERROUT"/>
+    </root>
+
+    <logger name="lapr4" level="ERROR">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="lapr4.daemon.cas.CustomerAppServerDaemon" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+
+    <logger name="lapr4.daemon.cas.presentation.CsvCustomerAppProtocolServer" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+
+    <logger name="lapr4.customerapp.csvprotocol.server.CsvCustomerAppProtocolMessageParser" level="WARN" additivity="false">
+        <appender-ref ref="ERROUT"/>
+    </logger>
+
+
+    <Logger name="org.hibernate.SQL" level="ERROR">
+        <appender-ref ref="ERROUT"/>
+    </Logger>
+
+    <Logger name="org.hibernate.type" level="ERROR">
+        <appender-ref ref="ERROUT" />
+    </Logger>
+
+    <Logger name="org.hibernate.util.DTDEntityResolver" level="ERROR">
+        <appender-ref ref="ERROUT" />
+    </Logger>
+
+</configuration>

@@ -1,0 +1,87 @@
+@startuml
+left to right direction
+skinparam defaultTextAlignment center
+skinparam linetype ortho
+
+' Define estilos por estereótipo
+skinparam rectangle {
+  BackgroundColor<<main>> #E3F2FD
+  BorderColor<<main>> #64B5F6
+
+  BackgroundColor<<utils>> #FFF3E0
+  BorderColor<<utils>> #FFB74D
+
+  BackgroundColor<<shared>> #E8F5E9
+  BorderColor<<shared>> #81C784
+
+  BackgroundColor<<drone>> #F3E5F5
+  BorderColor<<drone>> #BA68C8
+
+  BackgroundColor<<monitor>> #FFEBEE
+  BorderColor<<monitor>> #E57373
+}
+
+' Usa rectangle no lugar de package
+rectangle "main.c" <<main>> {
+  [Main Process]
+  [cleanup_all]
+  [wait_for_drones]
+  [fork_drones]
+  [setup_signal_handlers]
+  [handle_sigint]
+}
+
+rectangle "utils.c" <<utils>> {
+  [list_figures]
+  [ask_user_for_figure]
+  [load_figure]
+  [wait_for_user_input]
+}
+
+rectangle "shared_resources.c" <<shared>> {
+  [setup_shared_memory]
+  [cleanup_shared_memory]
+  [setup_semaphores]
+  [cleanup_semaphores]
+}
+
+rectangle "drone.c" <<drone>> {
+  [load_drone_routine]
+  [print_drone_info]
+  [validate_drone_path]
+  [drone_process]
+}
+
+rectangle "monitor.c" <<monitor>> {
+  [collision_monitor_thread]
+  [report_generation_thread]
+  [status_monitor_thread]
+  [environment_monitor_thread]
+}
+
+' Conexões
+[Main Process] --> [list_figures]
+[Main Process] --> [ask_user_for_figure]
+[Main Process] --> [load_figure]
+[Main Process] --> [wait_for_user_input]
+
+[load_figure] --> [load_drone_routine]
+[load_figure] --> [validate_drone_path]
+
+[Main Process] --> [setup_shared_memory]
+[Main Process] --> [setup_semaphores]
+[Main Process] --> [cleanup_all]
+[Main Process] --> [wait_for_drones]
+[Main Process] --> [fork_drones]
+[Main Process] --> [setup_signal_handlers]
+
+[setup_signal_handlers] --> [handle_sigint]
+[fork_drones] --> [drone_process]
+[cleanup_all] --> [cleanup_shared_memory]
+[cleanup_all] --> [cleanup_semaphores]
+
+[Main Process] --> [collision_monitor_thread]
+[Main Process] --> [report_generation_thread]
+[Main Process] --> [status_monitor_thread]
+[Main Process] --> [environment_monitor_thread]
+@enduml

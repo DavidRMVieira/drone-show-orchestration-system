@@ -1,0 +1,23 @@
+"@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "<<aggregate>> ProposalTemplate" {
+    class ProposalTemplate <<entity>> {
+    }
+
+    class FQClassName <<value object>> {
+    }
+
+    class ProposalTemplateVersion <<value object>> <<id>> {
+    }
+
+    ProposalTemplate --> "1" FQClassName
+    ProposalTemplate --> "1" ProposalTemplateVersion
+}
+
+@enduml
+"
+
+este aqui é o domain model da US 318

@@ -1,0 +1,122 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class DecommissionFigureCatalogueUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class DecommissionFigureCatalogueController <<application>> {
+        +decommissionFigure(figureDTO) : void
+        +allFigures() : Iterable<FigureDTO>
+    }
+
+    class FigureDTOParser <<application>> {
+        +transformToDTO(figures) : Iterable<FigureDTO>
+    }
+}
+
+package "DTO" {
+    class FigureDTO <<dto>> {
+    }
+}
+
+package "Domain" {
+
+    package "<<aggregate>> Figure" {
+    class Figure <<entity>> <<root>> {
+            - <<VO>> Description
+            +decommission() : void
+        }
+
+        class FigureCode <<value object>> {
+        }
+
+        enum FigureType <<value object>> {
+        }
+
+        class FigureVersion <<value object>> {
+        }
+
+        class DSL <<entity>> {
+            - <<VO>> Description
+        }
+
+        class DSLId <<value object>> {
+        }
+
+        class DSLVersion <<value object>> {
+        }
+
+        Figure --> "1" FigureCode
+        Figure --> "1" FigureType
+        Figure --> "1" FigureVersion
+        Figure --> "1" DSL
+        DSL --> "1" DSLId
+        DSL --> "1" DSLVersion
+    }
+
+package "<<aggregate>> Customer" {
+        class Customer <<entity>> <<root>> {
+        }
+
+        class VAT <<value object>> <<id>> {
+        }
+
+        class Name <<value object>> {
+        }
+
+        class Address <<value object>> {
+        }
+
+        enum CustomerState <<value object>> {
+        }
+
+        enum CustomerType <<value object>> {
+        }
+
+        Customer --> "1" VAT
+        Customer --> "1" Address
+        Customer --> "1" CustomerState
+        Customer --> "1" CustomerType
+        Customer --> "1" Name
+    }
+
+    package "<<aggregate>> FigureCategory" {
+        class FigureCategory <<entity>> <<root>> {
+            -boolean : active
+        }
+
+        class Designation <<value object>> {
+        }
+
+        class Description <<entity>> {
+        }
+
+        FigureCategory --> "1" Designation
+        FigureCategory --> "1" Description
+    }
+
+    Figure "*" --> "0..1" Customer : exclusive to
+    Figure "*" --> "1" FigureCategory : categories
+
+}
+
+package "Persistence" {
+    class Catalogue <<repository>> {
+        +save() : Figure
+    }
+}
+
+' Relationships
+DecommissionFigureCatalogueUI --> DecommissionFigureCatalogueController : uses
+
+DecommissionFigureCatalogueController --> "*" Figure : Figure
+DecommissionFigureCatalogueController --> Catalogue : repo
+DecommissionFigureCatalogueController --> FigureDTOParser : parser
+
+FigureDTOParser --> FigureDTO : dto
+
+@enduml

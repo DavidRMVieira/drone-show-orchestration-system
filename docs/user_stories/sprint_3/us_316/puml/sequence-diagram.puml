@@ -1,0 +1,166 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "CRM Collaborator" as Actor
+participant SendProposalUI as UI <<presentation>>
+participant SendProposalController as Controller <<application>>
+participant ListShowProposalService as ListService <<application>>
+participant GenerateProposalDocumentService as DocumentService <<application>>
+participant ShowProposalDTOParser as Parser <<application>>
+participant ShowProposal as Domain <<domain>>
+participant ShowProposalSentEvent as Event <<event>>
+participant EventPublisher as Publisher <<infrastructure>>
+participant ShowProposalSentHandler as Handler <<eventHandler>>
+database ShowProposalRepository as Repository <<repository>>
+database ProposalTemplateRepository as TemplateRepository <<repository>>
+
+Actor -> UI: Send Proposal
+activate UI
+
+    UI -> Controller: allShowProposals()
+    activate Controller
+
+    Controller -> ListService: allShowProposals()
+    activate ListService
+
+    ListService -> Repository: findAll()
+    activate Repository
+
+    Repository --> ListService: proposals
+    deactivate Repository
+
+    ListService -> Parser: transformToDTO(proposals)
+    activate Parser
+
+    Parser --> ListService: proposalsDTO
+    deactivate Parser
+
+    ListService --> Controller: proposalsDTO
+    deactivate ListService
+
+    Controller --> UI: proposalsDTO
+    deactivate Controller
+
+    UI --> Actor: Show list of proposals
+    Actor -> UI: Select proposal
+    Actor -> UI: Select language
+    Actor -> UI: Provide proposal template version
+
+    UI -> Controller: sendProposal(selectedProposal, language, proposalTemplateVersion)
+    activate Controller
+
+    Controller -> ListService: findShowProposalByID(proposalDTO.id)
+    activate ListService
+
+    ListService -> Repository: ofIdentity(id)
+    activate Repository
+
+    Repository --> ListService: proposal
+    deactivate Repository
+
+    ListService --> Controller: proposal
+    deactivate ListService
+
+    Controller -> Domain: isReadyToSend()
+    activate Domain
+
+    Domain --> Controller: boolean
+    deactivate Domain
+
+    alt Proposal is not ready to send
+        Controller --> UI: IllegalArgumentException
+    else Proposal is ready to send
+
+        Controller -> DocumentService: proposalDocument(proposal, language, proposalTemplateVersion)
+        activate DocumentService
+
+        DocumentService -> TemplateRepository: ofIdentity(proposalTemplateVersion)
+        activate TemplateRepository
+
+        TemplateRepository --> DocumentService: template
+        deactivate TemplateRepository
+
+        DocumentService -> DocumentService: generateProposalFile(proposal, language)
+        activate DocumentService
+
+        DocumentService --> DocumentService: tempFile
+        deactivate DocumentService
+
+        DocumentService -> DocumentService: buildImporter(className)
+        activate DocumentService
+
+        DocumentService --> DocumentService: importer
+        deactivate DocumentService
+
+        DocumentService -> DocumentService: importer.importFrom(content)
+        activate DocumentService
+
+        DocumentService --> DocumentService: document
+        deactivate DocumentService
+
+        DocumentService --> Controller: document
+        deactivate DocumentService
+
+        Controller -> Domain: hasRepresentative()
+        activate Domain
+
+        Domain --> Controller: boolean
+        deactivate Domain
+
+        alt Has Representative
+            Controller -> Event: new ShowProposalSentEvent(proposalID, crmCollaborator, representative, document)
+        else No Representative
+            Controller -> Event: new ShowProposalSentEvent(proposalID, crmCollaborator, customer, document)
+        end
+
+        Controller -> Publisher: publish(event)
+        activate Publisher
+
+        Publisher -> Handler: onEvent(event)
+        activate Handler
+
+        Handler -> ListService: findShowProposalByID(event.proposalID)
+        activate ListService
+
+        ListService -> Repository: ofIdentity(proposalID)
+        activate Repository
+
+        Repository --> ListService: proposal
+        deactivate Repository
+
+        ListService --> Handler: proposal
+        deactivate ListService
+
+        Handler -> Domain: sent(event)
+        activate Domain
+
+        note right of Domain : Changes state to AWAITING_RESPONSE\nStores document\nAdds event to events collection
+
+        Domain --> Handler: void
+        deactivate Domain
+
+        Handler -> Repository: save(proposal)
+        activate Repository
+
+        Repository --> Handler: proposal
+        deactivate Repository
+
+        Handler --> Publisher: void
+        deactivate Handler
+
+        Publisher --> Controller: void
+        deactivate Publisher
+
+    end
+
+    Controller --> UI: void (success) or Exception
+    deactivate Controller
+
+    UI --> Actor: Display success message or error
+deactivate UI
+
+@enduml

@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Activate Figure Category
+
+actor "Show Designer" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Activate Figure Category
+activate System
+
+System --> USER : Show Inactive Categories
+deactivate System
+
+USER -> System : Select Category
+activate System
+
+System --> USER : Display Category Info or error
+deactivate System
+
+@enduml

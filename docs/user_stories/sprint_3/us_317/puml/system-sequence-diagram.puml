@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Mark Show Proposal as Accepted by Collaborator
+
+actor "CRM Collaborator" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Request list of proposals accepted by customer
+activate System
+
+System --> USER : Display list of proposals
+deactivate System
+
+USER -> System : Select proposal and confirm acceptance
+activate System
+
+System --> USER : Show "Proposal accepted successfully."
+deactivate System
+
+@enduml

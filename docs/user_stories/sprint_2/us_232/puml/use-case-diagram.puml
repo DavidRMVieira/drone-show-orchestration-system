@@ -1,0 +1,14 @@
+@startuml
+!define RECTANGLE class
+
+actor "CRM Collaborator" as USER
+
+usecase "Search Figure By Category and Keyword" as UC1
+usecase "Search Figure By Category" as UC2
+usecase "Search Figure By Keyword" as UC3
+
+USER --> UC1
+USER --> UC2
+USER --> UC3
+
+@enduml

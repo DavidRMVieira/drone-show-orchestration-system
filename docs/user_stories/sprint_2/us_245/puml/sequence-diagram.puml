@@ -1,0 +1,47 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "Show Designer" as Actor
+participant AddFigureCategoryUI as UI <<presentation>>
+participant AddFigureCategoryController as Controller <<application>>
+participant FigureCategory as Domain <<domain>>
+database FigureCategoryRepository as Repository <<repository>>
+
+Actor --> UI: Requests to add a figure category
+activate UI
+
+UI --> Actor: prompts for category name and description
+Actor --> UI: enters name and description
+
+    UI -> Controller: addFigureCategory(name, description)
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+        note right of Controller : Simplified persistence\n(see specific diagram)
+
+        Controller -> Domain: create(name, description)
+
+        Controller -> Repository: save(category)
+        activate Repository
+
+        Repository --> Controller: category
+        deactivate Repository
+
+        Controller -> Domain: toDTO()
+        activate Domain
+
+        Domain --> Controller: categoryDTO
+        deactivate Domain
+
+        Controller --> UI: categoryDTO
+    deactivate Controller
+
+UI --> Actor: displays the new category details or error message
+deactivate UI
+
+@enduml

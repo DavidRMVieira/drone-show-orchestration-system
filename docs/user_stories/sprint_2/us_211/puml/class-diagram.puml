@@ -1,0 +1,104 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class AddUserUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class AddUserController <<application>> {
+        +roleTypes() : Role[]
+        +addUser(email, password, firstName, lastName, phoneNumber, roles) : ShodroneUser
+    }
+
+    class ShodroneUserService <<application>> {
+        +createShodroneUser(email, password, firstName, lastName, phoneNumber, roles) : ShodroneUser
+    }
+
+    class AuthzRegistry <<utility>> {
+        +userService() : UserManagementService
+    }
+
+    class UserManagementService <<application>> {
+        +registerNewUser(email, password, firstName, lastName, phoneNumber, roles, currentTime) : SystemUser
+    }
+}
+
+package "Domain" {
+    class ShodroneRoles {
+        +allRoles(): Role[]
+    }
+
+    package "<<aggregate>> ShodroneUser" {
+        class ShodroneUser <<entity>> <<root>> {
+        }
+
+        class ShodroneEmail <<value object>> <<id>> {
+        }
+
+        class PhoneNumber <<value object>> {
+        }
+    }
+
+    package "<<aggregate>> SystemUser" {
+        class SystemUser <<entity>> <<root>> {
+        }
+
+        class Username <<value object>> <<id>> {
+        }
+
+        class Password <<value object>> {
+        }
+
+        class Name <<value object>> {
+        }
+
+        class EmailAddress <<value object>> {
+        }
+
+        class RoleSet {
+        }
+
+        interface Set <<interface>> {
+        }
+
+        class RoleAssigment <<entity>> {
+        }
+
+        class Role <<value object>> {
+        }
+    }
+}
+
+package "Persistence" {
+    class ShodroneUserRepository <<repository>> {
+        +save(user) : ShodroneUser
+    }
+}
+
+AddUserUI --> AddUserController
+AddUserController --> ShodroneUserService : svc
+AuthzRegistry --> UserManagementService : userService
+ShodroneUserService ..> AuthzRegistry
+ShodroneUserService ..> UserManagementService : userSvc
+ShodroneUserService --> ShodroneUser : user
+UserManagementService --> SystemUser : systemUser
+ShodroneUserService --> ShodroneUserRepository : repo
+AddUserController --> ShodroneRoles : roleTypes
+
+ShodroneUser --> ShodroneEmail
+ShodroneUser --> PhoneNumber
+ShodroneUser --> SystemUser : has
+
+SystemUser --> Username
+SystemUser --> Password
+SystemUser --> Name
+SystemUser --> EmailAddress
+SystemUser --> RoleSet
+RoleSet ..|> Set
+Set ..> RoleAssigment
+RoleAssigment --> Role
+
+@enduml

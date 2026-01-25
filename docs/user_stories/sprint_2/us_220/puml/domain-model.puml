@@ -1,0 +1,102 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+    package "<<aggregate>> Customer" {
+        class Customer <<entity>> <<root>> {
+        }
+
+        class VAT <<value object>> <<id>> {
+        }
+
+        class Name <<value object>> {
+        }
+
+        class Address <<value object>> {
+        }
+
+        enum CustomerState <<value object>> {
+        }
+
+        enum CustomerType <<value object>> {
+        }
+
+        Customer --> VAT
+        Customer --> Name
+        Customer --> CustomerState
+        Customer --> CustomerType
+        Customer --> Address
+    }
+
+    package "<<aggregate>> Representative" {
+        class Representative <<entity>> <<root>> {
+        }
+
+        class EmailAddress <<value object>> <<id>> {
+        }
+
+        class Position <<value object>> {
+        }
+
+        Representative --> EmailAddress
+        Representative --> Position
+    }
+
+    package "<<aggregate>> ShodroneUser" {
+        class ShodroneUser <<entity>> <<root>> {
+        }
+
+        class ShodroneEmail <<value object>> <<id>> {
+        }
+
+        class PhoneNumber <<value object>> {
+        }
+
+        ShodroneUser --> ShodroneEmail
+        ShodroneUser --> PhoneNumber
+    }
+
+    package "<<aggregate>> SystemUser" {
+        class SystemUser <<entity>> <<root>> {
+        }
+
+        class Username <<value object>> <<id>> {
+        }
+
+        class Password <<value object>> {
+        }
+
+        class Name <<value object>> {
+        }
+
+        class EmailAddress <<value object>> {
+        }
+
+        class RoleSet {
+        }
+
+        interface Set <<interface>> {
+        }
+
+        class RoleAssigment <<entity>> {
+        }
+
+        class Role <<value object>> {
+        }
+
+        SystemUser --> Username
+        SystemUser --> Password
+        SystemUser --> Name
+        SystemUser --> EmailAddress
+        SystemUser --> RoleSet
+        RoleSet ..|> Set
+        Set ..> RoleAssigment
+        RoleAssigment --> Role
+    }
+
+ShodroneUser --> SystemUser : has
+Representative "*" --> Customer : represents
+Representative --> ShodroneUser : is a
+
+@enduml

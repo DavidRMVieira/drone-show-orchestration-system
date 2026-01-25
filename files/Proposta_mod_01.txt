@@ -1,0 +1,34 @@
+Exmos. Senhores
+[Company name]
+[Address with postal code and country]
+[VAT Number]
+
+Referência [proposal number] / [date]
+Proposta de Show
+
+Shodrone tem o prazer de submeter à sua apreciação uma proposta para execução de um show aéreo com drones, conforme descrição abaixo.
+Shodrone é uma empresa que dá prioridade à segurança, pelo que usa a mais avançada tecnologia de IA para apoiar o desenvolvimento dos seus shows, sendo que todos os shows são prévia e cuidadosamente testados/simulados com a tecnologia AI-Test© antes de serem apresentados ao cliente. No link [link to show's simulation video] encontra-se um vídeo com a simulação do show proposto.
+
+Com a aplicação do AI-Test©, um exclusivo da Shodrone, temos a confiança de oferecer um seguro de responsabilidade civil no valor de [valor do seguro] para o show. Os dados detalhados do show são apresentados em anexo.
+
+Estando certos que seremos alvo da sua preferência.
+
+Subscrevemo-nos ao dispor.
+
+Melhores cumprimentos,
+
+[CRM Manager Name]
+CRM Manager
+
+Anexo – Detalhes do Show [show proposal number]
+
+Local de realização – [GPS coordinates of the location]
+Data – [date of the event]
+Hora – [date of the event]
+Duração – [duration] minutos
+
+#Lista de drones utilizados
+[model] - [quantity] unidades.
+
+#Lista de figuras
+[position in show] - [figure name]

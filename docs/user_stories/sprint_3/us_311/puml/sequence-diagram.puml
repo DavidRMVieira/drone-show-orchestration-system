@@ -1,0 +1,171 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "CRM Collaborator" as Actor
+participant AddDroneProposalUI as UI <<presentation>>
+participant AddDroneProposalController as Controller <<application>>
+participant ListShowProposalService as proposalSvc <<application>>
+participant ListDroneModelService as droneSvc <<application>>
+participant ShowProposalDTOParser as proposalParser <<application>>
+participant DroneModelDTOParser as droneParser <<application>>
+participant ShowProposal as Domain <<domain>>
+participant DroneInShow as DroneInShow <<domain>>
+participant ShowProposalDTO as DTO <<dto>>
+participant DroneModelDTO as droneDTO <<dto>>
+database ShowProposalRepository as Repository <<repository>>
+database DroneModelRepository as droneModelRepository <<repository>>
+database DroneRepository as droneRepository <<repository>>
+
+Actor --> UI: Add Drone Proposal
+activate UI
+
+    UI -> Controller: listShowProposals()
+    activate Controller
+
+    note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+    note right of Controller : Simplified persistence\n(see specific diagram)
+
+        Controller -> proposalSvc : allShowProposals()
+        activate proposalSvc
+
+                    proposalSvc -> Repository : findAll()
+                    activate Repository
+
+                    Repository --> proposalSvc : requests
+                    deactivate Repository
+
+                    proposalSvc -> proposalParser : transformToDTO(proposals)
+                    activate proposalParser
+
+                    proposalParser --> proposalSvc : proposalsDTO
+                    deactivate proposalParser
+
+        proposalSvc --> Controller : proposalsDTO
+        deactivate proposalSvc
+
+    Controller --> UI: proposalsDTO
+    deactivate Controller
+
+    UI --> Actor: Show list of show proposals
+    Actor --> UI: Select show proposal
+
+    UI --> Actor : Show list of drones
+
+        UI -> Controller: listDroneModels()
+        activate Controller
+
+        Controller -> droneSvc : allDroneModels()
+        activate droneSvc
+
+                    droneSvc -> droneModelRepository : findAll()
+                    activate droneModelRepository
+
+                    droneModelRepository --> droneSvc : droneModels
+                    deactivate droneModelRepository
+
+                    droneSvc -> droneParser : transformToDTO(droneModels)
+                    activate droneParser
+
+                    droneParser --> droneSvc : droneModelsDTO
+                    deactivate droneParser
+
+        droneSvc --> Controller : droneModelsDTO
+        deactivate droneSvc
+
+        Controller --> UI: droneModelsDTO
+        deactivate Controller
+
+    Actor -> UI : Select drone
+
+    UI --> Actor: Request quantity
+    Actor --> UI: Provide quantity
+
+    UI -> Controller: addDroneProposal(selectedProposalDTO, selectedDroneModelDTO, quantity)
+    activate Controller
+
+        Controller -> DTO : id()
+        activate DTO
+
+        DTO --> Controller : proposalID
+        deactivate DTO
+
+        Controller -> proposalSvc : findShowProposalByID(proposalID)
+        activate proposalSvc
+
+                    proposalSvc -> Repository : ofIdentity(proposalID)
+                    activate Repository
+
+                    Repository --> proposalSvc : proposal
+                    deactivate Repository
+
+        proposalSvc --> Controller : proposal
+        deactivate proposalSvc
+
+        Controller -> droneDTO : name()
+        activate droneDTO
+
+        droneDTO --> Controller : droneModelName
+        deactivate droneDTO
+
+        Controller -> droneSvc : findDroneModelByName(droneModelName)
+        activate droneSvc
+
+                    droneSvc -> droneModelRepository : ofIdentity(droneModelName)
+                    activate droneModelRepository
+
+                    droneModelRepository --> droneSvc : droneModel
+                    deactivate droneModelRepository
+
+        droneSvc --> Controller : droneModel
+        deactivate droneSvc
+
+        Controller -> droneSvc : countActiveDronesByModel(droneModel)
+        activate droneSvc
+
+                    droneSvc -> droneRepository : countByModelAndState(droneModel, ACTIVE)
+                    activate droneRepository
+
+                    droneRepository --> droneSvc : activeDronesNumber
+                    deactivate droneRepository
+
+        droneSvc --> Controller : activeDronesNumber
+        deactivate droneSvc
+
+        alt quantity > activeDronesNumber
+
+        Controller -> Controller : throw IllegalArgumentException()
+
+        end
+
+        Controller -> Domain : identity()
+        activate Domain
+
+        Domain --> Controller : droneModelID
+        deactivate Domain
+
+        Controller -> DroneInShow : create(droneModelID, quantity)
+
+        Controller -> Domain : addDrone(droneInShow)
+        activate Domain
+
+        Domain --> Controller : proposal
+        deactivate Domain
+
+        Controller -> Repository: save(proposal)
+        activate Repository
+
+        Repository --> Controller: proposal
+        deactivate Repository
+
+        Controller --> UI:
+    deactivate Controller
+
+UI --> Actor: Display success or error message
+deactivate UI
+
+@enduml

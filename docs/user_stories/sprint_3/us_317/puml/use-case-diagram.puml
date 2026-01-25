@@ -1,0 +1,9 @@
+@startuml
+!define RECTANGLE class
+
+actor "CRM Collaborator" as USER
+usecase "Mark show proposal as accepted" as UC
+
+USER --> UC
+
+@enduml

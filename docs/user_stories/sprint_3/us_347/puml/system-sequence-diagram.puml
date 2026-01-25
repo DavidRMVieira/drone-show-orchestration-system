@@ -1,0 +1,31 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Validate Proposal Document
+
+actor "CRM Manager" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Validate Proposal Document
+activate System
+
+System --> USER : Show list of proposals
+deactivate System
+
+USER -> System : Select Show Proposal
+activate System
+
+System --> USER : Request Proposal Template Version and Language
+deactivate System
+
+USER -> System : Provide Proposal Template Version and Language
+activate System
+
+System --> USER : Display proposal document or error
+deactivate System
+
+@enduml

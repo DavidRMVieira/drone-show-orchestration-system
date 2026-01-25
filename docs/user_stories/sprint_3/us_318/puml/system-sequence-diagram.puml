@@ -1,0 +1,28 @@
+"@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Register Proposal Template
+
+actor "CRM Manager" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Register Proposal Template
+activate System
+
+System --> USER : Request Template Version and Class Name
+deactivate System
+
+USER -> System : Provide Template Version and Class Name
+activate System
+
+System --> USER : Display Template Info or Error
+deactivate System
+
+@enduml
+"
+
+aqui está o system sequence diagram da US 318

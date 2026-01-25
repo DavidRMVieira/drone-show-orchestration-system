@@ -1,0 +1,12 @@
+@startuml
+!define RECTANGLE class
+
+actor "Show Designer" as SD1
+actor "CRM Collaborator" as SD2
+
+usecase "List Figure Category" as UC
+
+SD1 --> UC
+SD2 --> UC
+
+@enduml

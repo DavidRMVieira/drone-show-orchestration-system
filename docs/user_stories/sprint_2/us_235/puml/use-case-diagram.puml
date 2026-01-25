@@ -1,0 +1,13 @@
+[22:04, 18/05/2025] Igor: 🤣🤣🤣🤣
+[22:10, 18/05/2025] Dani ISEP: @startuml
+!define RECTANGLE class
+
+actor "CRM Collaborator" as USER1
+actor "CRM Manager" as USER2
+
+usecase "List Show Requests by Customer" as UC
+
+USER1 --> UC
+USER2 --> UC
+
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+!define RECTANGLE class
+
+actor "Show Designer" as USER
+usecase "Validate DSL Description" as UC
+
+USER --> UC
+
+@enduml
+
+

@@ -1,0 +1,117 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class RegisterShowRequestUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class RegisterShowRequestController <<application>> {
+        +registerShowRequest(place, duration, customerDTO) : ShowRequestDTO
+        +listCustomer() : Iterable<CustomerDTO>
+    }
+
+    class ListCustomerService <<application>> {
+        +allCustomers() : Iterable<CustomerDTO>
+        +findCustomerByVatNumber(customerVat) : Customer
+    }
+
+    class CustomerDTOParser <<application>> {
+        +transformToDTO(customers) : Iterable<CustomerDTO>
+    }
+}
+
+package "DTO" {
+    class ShowRequestDTO <<dto>> {
+    }
+
+    class CustomerDTO <<dto>> {
+    }
+}
+
+package "Domain" {
+
+    package "<<aggregate>> ShowRequest" {
+    class ShowRequest <<entity>> <<root>> {
+    }
+
+    class ShowRequestID <<id>> {
+    }
+
+    class Place <<value object>> {
+    }
+
+    class Date <<value object>> {
+    }
+
+    class Duration <<value object>> {
+    }
+
+    enum RequestState <<value object>> {
+    }
+
+    ShowRequest --> ShowRequestID
+    ShowRequest --> Date
+    ShowRequest --> Place
+    ShowRequest --> Duration
+    ShowRequest --> RequestState
+    }
+
+package "<<aggregate>> Customer" {
+        class Customer <<entity>> <<root>> {
+        }
+
+        class VAT <<value object>> <<id>> {
+        }
+
+        class Name <<value object>> {
+        }
+
+        class Address <<value object>> {
+        }
+
+        enum CustomerState <<value object>> {
+        }
+
+        enum CustomerType <<value object>> {
+        }
+
+        Customer --> VAT
+        Customer --> Name
+        Customer --> CustomerState
+        Customer --> CustomerType
+        Customer --> Address
+    }
+
+}
+
+package "Persistence" {
+    class ShowRequestRepository <<repository>> {
+        +save(showRequest) : ShowRequest
+    }
+
+    class CustomerRepository <<repository>> {
+        +findAll : Iterable<Customer>
+        +ofIdentity(customerVat) : Customer
+    }
+}
+
+' Relationships
+RegisterShowRequestUI --> RegisterShowRequestController : uses
+
+RegisterShowRequestController --> ListCustomerService : svcCustomers
+RegisterShowRequestController --> ShowRequestRepository : showRequestRepository
+
+RegisterShowRequestController --> ShowRequest : showRequest
+RegisterShowRequestController --> ShowRequestDTO : showRequestDTO
+
+ListCustomerService --> CustomerRepository : customerRepository
+ListCustomerService --> CustomerDTOParser : parser
+
+CustomerDTOParser --> CustomerDTO : customerDTO
+
+ShowRequest --> Customer
+
+@enduml

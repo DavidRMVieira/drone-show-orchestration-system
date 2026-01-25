@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - List Show Requests by Customer
+
+actor "CRM Collaborator or Manager" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Request List Show Requests by Customer
+activate System
+
+System --> USER : Display list of Customers
+deactivate System
+
+USER -> System : Select Customer
+activate System
+
+System --> USER : Display list of Show Requests or error
+deactivate System
+
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+!define RECTANGLE class
+
+actor "Show Designer" as USER
+
+usecase "Activate Figure Category" as UC_Enable
+usecase "Inactivate Figure Category" as UC_Disable
+
+USER --> UC_Enable
+USER --> UC_Disable
+
+@enduml

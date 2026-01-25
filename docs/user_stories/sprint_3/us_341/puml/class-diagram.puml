@@ -1,0 +1,57 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+title Class Diagram - Validate DSL Description
+
+package "Presentation" {
+    class ValidateDSLDescriptionUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class ValidateDSLDescriptionController <<application>> {
+        +validateFigureDSL(dslDescription : String) : DSLDescription
+    }
+
+    class ValidateFigureDSLService <<application>> {
+        +validateDSL(dslDescription : String) : DSLDescription
+    }
+
+    class DSLImporter <<application>> {
+        +importFrom(content) : DSLDescription
+    }
+
+}
+
+package "Persistence" {
+    class DSLPluginRepository <<repository>> {
+        +save(figure : Figure) : Figure
+        +findByID(figureID : FigureID) : Figure
+    }
+}
+
+package "Domain" {
+
+    package "<<aggregate>> DSLPlugin" {
+    class DSLPlugin <<entity>> {
+    }
+
+    class FQClassName <<value object>> {
+    }
+
+    class DSLVersion <<value object>> <<id>> {
+    }
+
+    DSLPlugin --> "1" FQClassName
+    DSLPlugin --> "1" DSLVersion
+    }
+}
+
+ValidateDSLDescriptionUI --> ValidateDSLDescriptionController : uses
+ValidateDSLDescriptionController --> ValidateFigureDSLService : service
+ValidateFigureDSLService --> DSLImporter : parser
+ValidateFigureDSLService --> DSLPluginRepository : figureRepo
+DSLPluginRepository --> DSLPlugin : plugin
+
+@enduml

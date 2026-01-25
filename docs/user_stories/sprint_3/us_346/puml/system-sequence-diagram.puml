@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Validation of a drone program
+
+actor "Drone Tech" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Validation of a drone program
+activate System
+
+System --> USER : Request Drone Language Version and file name
+deactivate System
+
+USER -> System : Provide Drone Language Version and file name
+activate System
+
+System --> USER : Display drone document or error
+deactivate System
+
+@enduml

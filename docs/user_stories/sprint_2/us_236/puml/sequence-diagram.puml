@@ -1,0 +1,70 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User as Actor
+participant EditShowRequestUI as UI <<presentation>>
+participant EditShowRequestController as Controller <<application>>
+participant ShowRequestRepository as Repository <<repository>>
+participant "ShowRequest" as Domain <<domain>>
+
+Actor -> UI: Edit Show Request
+activate UI
+
+UI -> Controller: allShowRequests()
+activate Controller
+
+Controller -> Repository: findAll()
+activate Repository
+Repository --> Controller: List<ShowRequest>
+deactivate Repository
+
+Controller --> UI: List<ShowRequestDTO>
+deactivate Controller
+
+UI -> Actor: Display Show Requests
+Actor -> UI: Select ShowRequest
+
+UI -> Controller: changeShowRequestPlace(newPlace, showRequestDTO)
+activate Controller
+Controller -> Repository: save(updated ShowRequest)
+activate Repository
+Repository --> Controller: saved ShowRequest
+deactivate Repository
+Controller --> UI: updated ShowRequestDTO
+deactivate Controller
+
+UI -> Controller: changeShowRequestDate(newDate, showRequestDTO)
+activate Controller
+Controller -> Repository: save(updated ShowRequest)
+activate Repository
+Repository --> Controller: saved ShowRequest
+deactivate Repository
+Controller --> UI: updated ShowRequestDTO
+deactivate Controller
+
+UI -> Controller: changeShowRequestDuration(newDuration, showRequestDTO)
+activate Controller
+Controller -> Repository: save(updated ShowRequest)
+activate Repository
+Repository --> Controller: saved ShowRequest
+deactivate Repository
+Controller --> UI: updated ShowRequestDTO
+deactivate Controller
+
+UI -> Controller: changeShowRequestState(newState, showRequestDTO)
+activate Controller
+Controller -> Repository: save(updated ShowRequest)
+activate Repository
+Repository --> Controller: saved ShowRequest
+deactivate Repository
+Controller --> UI: updated ShowRequestDTO
+deactivate Controller
+
+UI -> Actor: ShowRequest updated successfully
+
+deactivate UI
+@enduml

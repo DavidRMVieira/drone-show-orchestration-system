@@ -1,0 +1,100 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class LoginUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    interface CredentialHandler <<interface>> {
+        +authenticated(username, password, roles) : boolean
+    }
+
+    class AuthenticationCredentialHandler <<service>> {
+        +authenticated(username, password, roles) : boolean
+    }
+
+    class AuthzRegistry <<utility>> {
+        +authenticationService() : AuthenticationService
+    }
+
+    class AuthenticationService <<service>> {
+        +authenticate(username, password, roles) : Optional<UserSession>
+    }
+
+    class AuthorizationService <<service>> {
+        +createSessionForUser(user) : Optional<UserSession>
+    }
+
+}
+
+package "Persistence" {
+    class UserRepository <<repository>> {
+        +ofIdentity(username) : Optional<SystemUser>
+    }
+}
+
+package "Domain" {
+    package "<<aggregate>> SystemUser" {
+
+        class SystemUser <<entity>> <<root>> {
+        }
+
+        class Username <<value object>> <<id>> {
+        }
+
+        class UserSession <<value object>> {
+        }
+
+        class Password <<value object>> {
+        }
+
+        class Name <<value object>> {
+        }
+
+        class EmailAddress <<value object>> {
+        }
+
+        class RoleSet {
+        }
+
+        interface Set <<interface>> {
+        }
+
+        class RoleAssigment <<entity>> {
+        }
+
+        class Role <<value object>> {
+        }
+
+    }
+}
+
+LoginUI --> CredentialHandler
+AuthenticationCredentialHandler ..|> CredentialHandler
+AuthenticationCredentialHandler ..> AuthenticationService : authenticationService
+AuthenticationCredentialHandler ..> AuthzRegistry
+AuthzRegistry --> AuthenticationService : authenticationService
+AuthenticationService ..> UserRepository : repo
+AuthenticationService ..> SystemUser : user
+AuthenticationService ..> AuthorizationService : authz
+AuthorizationService --> UserSession : session
+UserSession --> SystemUser
+
+AuthenticationService ..> Username : username
+AuthenticationService ..> Password : password
+UserRepository --> SystemUser
+
+SystemUser --> Username
+SystemUser --> Password
+SystemUser --> Name
+SystemUser --> EmailAddress
+SystemUser --> RoleSet
+RoleSet ..|> Set
+Set ..> RoleAssigment
+RoleAssigment --> Role
+
+@enduml

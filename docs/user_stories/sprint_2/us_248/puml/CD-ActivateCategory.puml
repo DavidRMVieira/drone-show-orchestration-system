@@ -1,0 +1,60 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class ActivateFigureCategoryUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class ActivateFigureCategoryController <<application>> {
+        +inactiveFigureCategories() : Iterable<FigureCategoryDTO>
+        +activateFigureCategory(categoryDTO) : FigureCategoryDTO
+    }
+
+    class ListFigureCategoryService <<application>> {
+        +allInactiveFigureCategories() : Iterable<FigureCategoryDTO>
+    }
+
+    class FigureCategoryDTOParser <<application>> {
+        +transformToDTO(inactiveCategories) : Iterable<FigureCategoryDTO>
+        +valueOf(categoryDTO) : FigureCategory
+    }
+}
+
+package "dto" {
+    class FigureCategoryDTO <<dto>> {
+    }
+}
+
+package "Domain" {
+    class FigureCategory <<entity>> <<root>> {
+        +activate() : void
+    }
+    class Designation <<value object>> {
+    }
+    class Description <<value object>> {
+    }
+
+    FigureCategory --> Designation
+    FigureCategory --> Description
+}
+
+package "Persistence" {
+    class FigureCategoryRepository <<repository>> {
+        +findAllInactive() : Iterable<FigureCategory>
+        +save(category) : FigureCategory
+    }
+}
+
+ActivateFigureCategoryUI --> ActivateFigureCategoryController
+ListFigureCategoryService --> FigureCategoryRepository : repo
+ActivateFigureCategoryController --> ListFigureCategoryService : svc
+ActivateFigureCategoryController --> FigureCategoryDTO : categoryDTO
+ActivateFigureCategoryController --> FigureCategory : category
+ActivateFigureCategoryController --> FigureCategoryDTOParser : parser
+ListFigureCategoryService --> FigureCategoryDTOParser : parser
+FigureCategoryDTOParser --> FigureCategoryDTO : categoriesDTO
+
+@enduml

@@ -1,0 +1,105 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "CRM Collaborator" as Actor
+participant RegisterCustomerUI as UI <<presentation>>
+participant RegisterCustomerController as Controller <<application>>
+participant RegisterCustomerService as svc <<application>>
+participant ShodroneUserService as userSvc <<application>>
+participant PersistenceContext as Persistence <<persistence>>
+participant RepositoryFactory as Factory <<persistence>>
+participant TransactionalContext as transactional <<repository>>
+participant "customer:Customer" as customerDomain <<domain>>
+participant "representative:Representative" as repDomain <<domain>>
+database CustomerRepository as customerRepo <<repository>>
+database RepresentativeRepository as representativeRepo <<repository>>
+
+Actor --> UI: Register Customer
+activate UI
+    UI --> Actor: Ask customer information
+    Actor --> UI: VAT Number, First Name, \nLast Name, Street, City, \nPostal Code, Country
+    UI --> Actor: Show List of \nCustomer Types
+    Actor --> UI: Customer Type
+    UI --> Actor: Ask representative information
+    Actor --> UI: First Name, Last Name, Email, \nPhone Number, Position, \nShodrone Email, Password
+
+    UI -> Controller: create
+
+    UI -> Controller: registerCustomer(customerVatNumber, customerFirstName, customerLastName, \nstreet, city, postalCode, country, customerType, representativeFirstName, \nrepresentativeLastName, representativeEmail, representativePhoneNumber, \nrepresentativePosition, representativeShodroneEmail, representativePassword)
+    activate Controller
+
+        Controller -> svc: create
+
+        Controller -> svc: registerCustomer(customerVatNumber, customerFirstName, customerLastName, \nstreet, city, postalCode, country, customerType, representativeFirstName, \nrepresentativeLastName, representativeEmail, representativePhoneNumber, \nrepresentativePosition, representativeShodroneEmail, representativePassword)
+        activate svc
+
+            note right of svc : Simplified persistence\n(see specific diagram)
+
+        svc -> Persistence: repositories()
+        activate Persistence
+
+            Persistence --> svc: factory
+        deactivate Persistence
+
+        svc -> Factory: newTransactionalContext()
+        activate Factory
+
+            Factory --> svc: txCtx
+        deactivate Factory
+
+            note right of svc : hidden authorization user guarantee \n(see specific diagram)
+
+            svc -> transactional : beginTransaction()
+            activate transactional
+
+            transactional --> svc
+            deactivate transactional
+
+            svc -> customerDomain : create(customerVatNumber, customerFirstName, customerLastName, customerState, address, customerType)
+
+            svc -> customerRepo: save(customer)
+            activate customerRepo
+            customerRepo --> svc : customer
+            deactivate customerRepo
+
+            svc -> userSvc: create
+
+            svc -> userSvc: createShodroneUser(representativeShodroneEmail, representativePassword, \nrepresentativeFirstName, representativeLastName, representativePhoneNumber, roles)
+            activate userSvc
+            note right of userSvc : registering a user \n(see specific diagram)
+
+            userSvc --> svc : user
+            deactivate userSvc
+
+            svc -> repDomain : create(customer, representativeEmail, representativePosition, user)
+
+            svc -> representativeRepo: save(representative)
+            activate representativeRepo
+            representativeRepo --> svc : representative
+            deactivate representativeRepo
+
+            svc -> transactional : commit()
+            activate transactional
+
+            transactional --> svc
+            deactivate transactional
+
+            svc -> customerDomain : toDTO()
+            activate customerDomain
+
+            customerDomain --> svc : customerDTO
+            deactivate customerDomain
+
+        svc --> Controller : customerDTO
+        deactivate svc
+
+        Controller->UI: customerDTO
+    deactivate Controller
+
+        UI-->Actor: Display Customer and Representative Info or error
+deactivate UI
+@enduml

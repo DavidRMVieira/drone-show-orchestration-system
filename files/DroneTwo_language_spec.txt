@@ -1,0 +1,35 @@
+DroneTwo programming language version 0.666
+
+Types
+
+Point - (x, y, z), so that x, y and z are floating point numbers in meters
+Vector - (x, y, z), so that x, y and z are floating point numbers in meters
+LinearVelocity - floating point number in m/s
+AngularVelocity - floating point number in rad/s
+Distance - floating point number in m
+Time - integer number in ms
+
+Variables
+
+<type> <variable name> = <initial value>;
+Point aPoint = (0, 1, 1.5);
+Vector aDirection = (0,0,1)-(0,1,0);
+
+LinearVelocity aVelocity = 6.2;
+AngularVelocity rotVelocity = PI/10;
+
+Point arrayOfPoints =((0, 0, 0), (0, 0, 20), (0, 20, 20), (0, 30, 20), (-10, 50, 25));
+
+Instructions
+
+takeOff(<height>, <velocity>);
+land(<velocity>);
+move(<final position>, <velocity>);
+move(<direction vector>, <velocity>, <duration>);
+movePath(<array of points>, <velocity>);
+moveCircle(<center point>, <angle>, <angular velocity>);
+moveCircle(<center point>, <duration>, <angular velocity>);
+hoover(<time>);
+
+lightsOn(<color>);
+lightsOff();

@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Decommission Figure
+
+actor "CRM Manager" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Decommission Figure
+activate System
+
+System --> USER : Request Figure to decommission
+deactivate System
+
+USER -> System : Provide Figure
+activate System
+
+System --> USER : Show success or error message
+deactivate System
+
+@enduml

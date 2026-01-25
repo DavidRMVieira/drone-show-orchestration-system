@@ -1,0 +1,20 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "<<aggregate>> DSLPlugin" {
+    class DSLPlugin <<entity>> {
+    }
+
+    class FQClassName <<value object>> {
+    }
+
+    class DSLVersion <<value object>> <<id>> {
+    }
+
+    DSLPlugin --> "1" FQClassName
+    DSLPlugin --> "1" DSLVersion
+}
+
+@enduml

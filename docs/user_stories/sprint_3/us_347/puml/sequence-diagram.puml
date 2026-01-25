@@ -1,0 +1,133 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "Drone Tech" as Actor
+participant ValidateProposalDocumentUI as UI <<presentation>>
+participant ValidateProposalDocumentController as Controller <<application>>
+participant GenerateProposalDocumentService as svc <<application>>
+participant ListShowProposalService as proposalSvc <<application>>
+participant ProposalTemplateImporter as importer <<application>>
+participant ShowProposalDTOParser as proposalParser <<application>>
+participant ProposalTemplate as Domain <<domain>>
+participant ShowProposal as propDomain <<domain>>
+participant ShowProposalDTO as propDTO <<dto>>
+database ProposalTemplateRepository as Repository <<repository>>
+database ShowProposalRepository as propRepository <<repository>>
+
+Actor --> UI: Validate Proposal Document
+activate UI
+
+    UI -> Controller: listShowProposals()
+    activate Controller
+
+    note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+    note right of Controller : Simplified persistence\n(see specific diagram)
+
+        Controller -> proposalSvc : allShowProposals()
+        activate proposalSvc
+
+                    proposalSvc -> propRepository : findAll()
+                    activate propRepository
+
+                    propRepository --> proposalSvc : proposals
+                    deactivate propRepository
+
+                    proposalSvc -> proposalParser : transformToDTO(proposals)
+                    activate proposalParser
+
+                    proposalParser --> proposalSvc : proposalsDTO
+                    deactivate proposalParser
+
+        proposalSvc --> Controller : proposalsDTO
+        deactivate proposalSvc
+
+    Controller --> UI: proposalsDTO
+    deactivate Controller
+
+    UI --> Actor: Show list of show proposals
+    Actor --> UI: Select show proposal
+
+UI --> Actor: Request Proposal Template Version and Language
+Actor --> UI: Provide Proposal Template Version and Language
+
+    UI -> Controller: validateProposalDocument(selectedShowProposalDTO, language, proposalTemplateVersion)
+    activate Controller
+
+        Controller -> propDTO : id()
+        activate propDTO
+
+        propDTO --> Controller : proposalID
+        deactivate propDTO
+
+        Controller -> proposalSvc : findShowProposalByID(proposalID)
+        activate proposalSvc
+
+                    proposalSvc -> Repository : ofIdentity(proposalID)
+                    activate Repository
+
+                    Repository --> proposalSvc : proposal
+                    deactivate Repository
+
+        proposalSvc --> Controller : proposal
+        deactivate proposalSvc
+
+        Controller -> svc : proposalDocument(proposal, language, proposalTemplateVersion)
+        activate svc
+
+                    svc -> Repository : ofIdentity(proposalTemplateVersion)
+                    activate Repository
+
+                    Repository --> svc : proposalTemplatePlugin
+                    deactivate Repository
+
+                    svc -> Domain : className()
+                    activate Domain
+
+                    Domain --> svc : className
+                    deactivate Domain
+
+                    svc -> svc : buildImporter(className)
+                    activate svc
+
+                    svc --> svc : ProposalTemplateImporter
+                    deactivate svc
+
+                    svc -> svc : generateProposalFile(proposal, language)
+                    activate svc
+
+                    svc --> svc : content
+                    deactivate svc
+
+                    svc -> importer : importFrom(content)
+                    activate importer
+
+                    importer --> svc : document
+                    deactivate importer
+
+        svc --> Controller : document
+        deactivate svc
+
+        Controller -> propDomain: markAsReadyToSend()
+        activate propDomain
+
+        propDomain --> Controller : void
+        deactivate propDomain
+
+        Controller -> Repository: save(proposal)
+        activate Repository
+
+        Repository --> Controller: proposal
+        deactivate Repository
+
+        Controller --> UI: document
+    deactivate Controller
+
+UI --> Actor: Display proposal document or error
+deactivate UI
+
+@enduml

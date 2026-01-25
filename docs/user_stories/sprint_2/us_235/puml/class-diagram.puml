@@ -1,0 +1,120 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class ListShowRequestCustomerUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class ListShowRequestCustomerController <<application>> {
+        +listCustomer(): Iterable<CustomerDTO>
+        +listShowRequestCustomer(customerDTO): Iterable<ShowRequestDTO>
+    }
+
+    class ListCustomerService <<application>> {
+        +allCustomers() : Iterable<CustomerDTO>
+        +findCustomerByVatNumber(customerVat) : Customer
+    }
+
+    class ShowRequestDTOParser <<application>> {
+        +transformToDTO(showRequests) : Iterable<ShowRequestDTO>
+    }
+
+    class CustomerDTOParser <<application>> {
+        +transformToDTO(customers) : Iterable<CustomerDTO>
+    }
+}
+
+package "DTO" {
+    class ShowRequestDTO <<dto>> {
+    }
+
+    class CustomerDTO <<dto>> {
+    }
+}
+
+package "Domain" {
+
+package "<<aggregate>> ShowRequest" {
+    class ShowRequest <<entity>> <<root>> {
+    }
+
+    class ShowRequestID <<id>> {
+    }
+
+    class Place <<value object>> {
+    }
+
+    class Date <<value object>> {
+    }
+
+    class Duration <<value object>> {
+    }
+
+    enum RequestState <<value object>> {
+    }
+
+    ShowRequest --> ShowRequestID
+    ShowRequest --> Date
+    ShowRequest --> Place
+    ShowRequest --> Duration
+    ShowRequest --> RequestState
+    }
+
+package "<<aggregate>> Customer" {
+        class Customer <<entity>> <<root>> {
+        }
+
+        class VAT <<value object>> <<id>> {
+        }
+
+        class Name <<value object>> {
+        }
+
+        class Address <<value object>> {
+        }
+
+        enum CustomerState <<value object>> {
+        }
+
+        enum CustomerType <<value object>> {
+        }
+
+        Customer --> VAT
+        Customer --> Name
+        Customer --> CustomerState
+        Customer --> CustomerType
+        Customer --> Address
+    }
+
+}
+
+package "Persistence" {
+    class ShowRequestRepository <<repository>> {
+        +findAllByCustomer(customer) : Iterable<ShowRequestDTO>
+    }
+
+    class CustomerRepository <<repository>> {
+        +findAll : Iterable<Customer>
+        +ofIdentity(customerVat) : Customer
+    }
+}
+
+ListShowRequestCustomerUI --> ListShowRequestCustomerController
+
+ListShowRequestCustomerController --> ShowRequestRepository : showRequestRepository
+ListShowRequestCustomerController --> ListCustomerService : svcCustomers
+ListShowRequestCustomerController --> ShowRequestDTOParser : parser
+ListShowRequestCustomerController --> ShowRequest : showRequest
+
+ShowRequest --> Customer : requested by
+
+ShowRequestDTOParser --> ShowRequestDTO : showRequestDTO
+
+ListCustomerService --> CustomerRepository : customerRepository
+ListCustomerService --> CustomerDTOParser : parser
+CustomerDTOParser --> CustomerDTO : customerDTO
+
+@enduml

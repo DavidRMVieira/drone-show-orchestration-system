@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Disable User
+
+actor "Admin" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Disable User
+activate System
+
+System --> USER : Show Active Users
+deactivate System
+
+USER -> System : Select User
+activate System
+
+System --> USER : Display User Info or error
+deactivate System
+
+@enduml

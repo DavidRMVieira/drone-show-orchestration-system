@@ -1,0 +1,10 @@
+@startuml
+!define RECTANGLE class
+
+actor "CRM Manager" as USER
+
+usecase "Decommission Figure" as UC1
+
+USER --> UC1
+
+@enduml

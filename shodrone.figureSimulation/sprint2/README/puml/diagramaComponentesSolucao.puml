@@ -1,0 +1,95 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam defaultTextAlignment center
+
+' Linha 1
+package "Step 1: Wind Listing" {
+  [list_wind] --> [Lists available wind data]
+}
+
+package "Step 2: Ask Wind Data" {
+  [ask_user_for_wind_data] --> [Prompts user for wind data file]
+}
+
+package "Step 3: Load Wind" {
+  [load_wind_data] --> [Loads wind data]
+  [load_wind_data] --> [load_wind] : calls
+}
+
+' Linha 2
+package "Step 4: List Figures" {
+  [list_figures] --> [Lists figure files]
+}
+
+package "Step 5: Ask Figure" {
+  [ask_user_for_figure] --> [Prompts user for figure]
+}
+
+package "Step 6: Load Figures" {
+  [load_figure_and_drones] --> [Loads figure and drones]
+  [load_figure_and_drones] --> [load_figure] : calls
+  package "drone.c" {
+    [load_drone_routine]
+  }
+  [load_figure] --> [load_drone_routine] : calls
+}
+
+' Linha 3
+package "Step 7: Setup Signals" {
+  [setup_parent_signal_handlers] --> [Parent signal handler setup]
+}
+
+package "Step 8: Create Drones Processes" {
+  [create_drone_processes_with_wind] --> [Creates processes per drone]
+}
+
+package "Step 9: Wait Input" {
+  [wait_for_user_input] --> [Waits for control input]
+}
+
+' Linha 4
+package "Step 10: Detect Collisions" {
+  [detect_collisions] --> [Monitors collisions]
+}
+
+package "Step 11: Cleanup" {
+  [cleanup_and_wait] --> [Waits for children to finish]
+}
+
+package "Step 12: Report" {
+  [get_report] --> [report.txt] : creates
+}
+
+' Processos principais
+[Main Process] --> [list_wind]
+[Main Process] --> [ask_user_for_wind_data]
+[Main Process] --> [load_wind_data]
+[Main Process] --> [list_figures]
+[Main Process] --> [ask_user_for_figure]
+[Main Process] --> [load_figure_and_drones]
+[Main Process] --> [setup_parent_signal_handlers]
+[Main Process] --> [create_drone_processes_with_wind]
+[Main Process] --> [wait_for_user_input]
+[Main Process] --> [detect_collisions]
+[Main Process] --> [cleanup_and_wait]
+[Main Process] --> [get_report]
+
+' Handlers num pacote à parte
+package "Signal Handlers" {
+  [handle_sigusr1]
+  [handle_sigusr2_child]
+  [handle_sigusr2_parent]
+  [handle_sigusr1_collision]
+  [handle_sigterm]
+
+  [handle_sigusr1] --> [Handler for SIGUSR1 to indicate drones should start their routines]
+  [handle_sigusr2_child] --> [Handler for SIGUSR2 to indicate drones should exit after completing their routines]
+  [handle_sigusr2_parent] --> [Handler for SIGUSR2 to indicate if all the processes have been completed]
+  [handle_sigusr1_collision] --> [Handler for SIGUSR1 to indicate if a collision has been detected]
+  [handle_sigterm] --> [Handler for clean termination]
+}
+
+[Main Process] --> [Signal Handlers] : has
+
+@enduml

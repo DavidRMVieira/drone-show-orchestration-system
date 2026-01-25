@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Get Show Info
+
+actor "Representative" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Get Show Info
+activate System
+
+System --> USER : Show list of shows
+deactivate System
+
+USER -> System : Select show
+activate System
+
+System --> USER : Display show info
+deactivate System
+
+@enduml

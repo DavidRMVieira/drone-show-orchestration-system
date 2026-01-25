@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Evaluate a Show Proposal
+
+actor "Representative" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Request access to received show proposals
+activate System
+
+System --> USER : Display list of their show proposals
+deactivate System
+
+USER -> System : Select a show proposal and decide whether to accept or reject it
+activate System
+
+System --> USER : Display success or error message
+deactivate System
+
+@enduml

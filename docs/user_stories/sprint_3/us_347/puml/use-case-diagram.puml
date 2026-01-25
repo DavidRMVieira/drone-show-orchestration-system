@@ -1,0 +1,9 @@
+@startuml
+!define RECTANGLE class
+
+actor "CRM Manager" as USER
+usecase "Validate Proposal Document" as UC
+
+USER --> UC
+
+@enduml

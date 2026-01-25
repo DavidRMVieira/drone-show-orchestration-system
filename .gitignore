@@ -1,0 +1,55 @@
+# Database
+bd
+
+# Ignore Maven build directory
+shodrone.app.backoffice/target/
+shodrone.app.user/target/
+shodrone.app.bootstrap/target/
+shodrone.app.pos/target/
+shodrone.app.common/target/
+shodrone.core/target/
+shodrone.core/shodrone.core.iml
+shodrone.bootstrap.core/target/
+shodrone.infrastructure.application/target/
+shodrone.persistence.impl.jpa/target/
+shodrone.persistence.impl.inmemory/target/
+shodrone.integrations.plugins/target/
+shodrone.util.ci/target/
+target
+
+# Ignore IntelliJ IDEA files
+/.idea/
+/*.iml
+*.iml
+
+# Ignore Maven files that should not be versioned
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.next
+release.properties
+
+# Ignore log files
+*.log
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore Lombok-generated files
+delombok/
+
+# Ignore Maven dependency-reduced POM files
+**/dependency-reduced-pom.xml
+
+# Ignore Jacoco coverage reports
+jacoco.exec
+*.coverage
+*.coverage.xml
+
+# Ignore Maven test reports
+surefire-reports/
+failsafe-reports/
+
+# Ignore Maven local repository cache
+.m2/

@@ -1,0 +1,125 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class AddVideoSimulationProposalUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class AddVideoSimulationProposalController <<application>> {
+        +addVideoSimulationProposal(selectedProposalDTO, videoLink) : void
+        +listShowProposals() : Iterable<ShowProposalDTO>
+    }
+
+    class ListShowProposalService <<application>> {
+        +allShowProposals() : Iterable<ShowProposalDTO>
+        +findShowProposalByID(proposalID) : ShowProposal
+    }
+
+    class ShowProposalDTOParser <<application>> {
+        +transformToDTO(proposals) : Iterable<ShowProposalDTO>
+    }
+}
+
+package "Persistence" {
+    class ShowProposalRepository <<repository>> {
+        +save(proposal) : ShowProposal
+        +findAll() : Iterable<ShowProposal>
+        +ofIdentity(proposalID) : ShowProposal
+    }
+}
+
+package "DTO" {
+    class ShowProposalDTO <<dto>> {
+    }
+}
+
+package "Domain" {
+
+package "<<aggregate>> ShowProposal" {
+    class ShowProposal <<entity>> <<root>> {
+        - numberDrones : int
+        +addVideoSimulation(videoLink) : void
+    }
+
+    class ShowProposalID <<value object>> <<id>> {
+    }
+
+    class Location <<value object>> {
+    }
+
+    class Date <<value object>> {
+    }
+
+    class Duration <<value object>> {
+    }
+
+    class VideoFile <<value object>> {
+    }
+
+    class Language <<value object>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    enum ShowProposalState <<value object>> {
+    }
+
+    class DroneInShow <<value object>> {
+        -quantity : int
+    }
+
+    class FigureInShow <<value object>> {
+        -coordinateX : double
+        -coordinateY : double
+        -coordinateZ : double
+    }
+
+    class DroneModelName <<value object>> {
+    }
+
+    class FigureCode <<value object>> {
+    }
+
+    class SimulationLog <<entity>> {
+    }
+
+    enum SimulationResult <<value object>> {
+    }
+
+    ShowProposal --> "1" ShowProposalID
+    ShowProposal --> "1" Date
+    ShowProposal --> "1" Location
+    ShowProposal --> "1" Duration
+    ShowProposal --> "1" VideoFile
+    ShowProposal --> "1" Money
+    ShowProposal --> "1" Language
+    ShowProposal --> "1" ShowProposalState
+    ShowProposal --> "*" DroneInShow
+    ShowProposal --> "*" FigureInShow
+    DroneInShow --> "1" DroneModelName
+    FigureInShow --> "1" FigureCode
+    ShowProposal --> "*" SimulationLog
+    SimulationLog --> "1" Date
+    SimulationLog --> "1" SimulationResult
+}
+}
+
+' Relationships
+AddVideoSimulationProposalUI --> AddVideoSimulationProposalController : uses
+
+AddVideoSimulationProposalController --> ListShowProposalService : svc
+AddVideoSimulationProposalController --> ShowProposalRepository : repository
+
+AddVideoSimulationProposalController --> ShowProposal : proposal
+
+ListShowProposalService --> ShowProposalDTOParser : parser
+
+ListShowProposalService --> ShowProposalRepository : repository
+
+ShowProposalDTOParser --> ShowProposalDTO : proposalDTO
+
+@enduml

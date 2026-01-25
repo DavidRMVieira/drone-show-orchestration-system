@@ -1,0 +1,106 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "CRM Collaborator" as Actor
+participant AddFigureProposalUI as UI <<presentation>>
+participant AddFigureProposalController as Controller <<application>>
+participant ListShowProposalService as proposalSvc <<application>>
+participant ShowProposalDTO as DTO <<dto>>
+participant ShowProposalDTOParser as proposalParser <<application>>
+participant Catalogue as catalogue <<repository>>
+participant FigureDTO as FigureDTO <<dto>>
+participant FigureDTOParser as figureParser <<application>>
+participant ShowProposal as Domain <<domain>>
+participant FigureInShow as FigureInShow <<domain>>
+database ShowProposalRepository as Repository <<repository>>
+
+
+Actor --> UI : Add Figure to Proposal
+activate UI
+
+    UI -> Controller : listShowProposals()
+    activate Controller
+
+        Controller -> proposalSvc : allShowProposals()
+        activate proposalSvc
+
+            proposalSvc -> Repository : findAll()
+            activate Repository
+            Repository --> proposalSvc : showProposals
+            deactivate Repository
+
+            proposalSvc -> proposalParser : transformToDTO(showProposals)
+            activate proposalParser
+            proposalParser --> proposalSvc : showProposalsDTO
+            deactivate proposalParser
+
+        proposalSvc --> Controller : showProposalsDTO
+        deactivate proposalSvc
+
+    Controller --> UI : showProposalsDTO
+    deactivate Controller
+
+UI --> Actor : Display list of proposals
+Actor --> UI : Select proposal
+
+UI -> Controller : listActiveFigures()
+activate Controller
+
+    Controller -> catalogue : findAllPublic()
+    activate catalogue
+    catalogue --> Controller : figures
+    deactivate catalogue
+
+Controller --> UI : figures
+deactivate Controller
+
+UI --> Actor : Display figures
+Actor --> UI : Select figure and position
+Actor --> UI : Map drone types to models
+
+UI -> Controller : addFigureToProposal(selectedProposalDTO, selectedFigureDTO, position, mapping)
+activate Controller
+
+    Controller -> DTO : id()
+    activate DTO
+    DTO --> Controller : proposalID
+    deactivate DTO
+
+    Controller -> proposalSvc : findShowProposalByID(proposalID)
+    activate proposalSvc
+
+        proposalSvc -> Repository : ofIdentity(proposalID)
+        activate Repository
+        Repository --> proposalSvc : showProposal
+        deactivate Repository
+
+    proposalSvc --> Controller : showProposal
+    deactivate proposalSvc
+
+    Controller -> figureParser : valueOf(selectedFigureDTO)
+    activate figureParser
+    figureParser --> Controller : figure
+    deactivate figureParser
+
+    Controller -> Domain : addFigure(figureInShow)
+    activate Domain
+
+    Domain --> Controller : proposal
+    deactivate Domain
+
+    Controller -> Repository : save(proposal)
+    activate Repository
+    Repository --> Controller : savedProposal
+    deactivate Repository
+
+Controller --> UI : success or error
+deactivate Controller
+
+UI --> Actor : Show success or validation error
+deactivate UI
+
+@enduml

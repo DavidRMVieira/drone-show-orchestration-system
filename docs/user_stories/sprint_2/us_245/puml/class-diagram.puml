@@ -1,0 +1,47 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class AddFigureCategoryUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class AddFigureCategoryController <<application>> {
+        +addFigureCategory(name, description) : FigureCategoryDTO
+    }
+}
+
+package "dto" {
+    class FigureCategoryDTO <<dto>> {
+    }
+}
+
+package "Domain" {
+    class FigureCategory <<entity>> <<root>> {
+        -active : boolean
+        +toDTO() : FigureCategoryDTO
+    }
+    class Designation <<value object>> {
+    }
+    class Description <<value object>> {
+    }
+
+    FigureCategory --> Designation
+    FigureCategory --> Description
+}
+
+package "Persistence" {
+    class FigureCategoryRepository <<repository>> {
+        +save(category) : FigureCategory
+    }
+}
+
+AddFigureCategoryUI --> AddFigureCategoryController
+AddFigureCategoryController --> FigureCategoryRepository : repo
+AddFigureCategoryController --> FigureCategoryDTO : categoryDTO
+AddFigureCategoryController --> FigureCategory : category
+FigureCategory --> FigureCategoryDTO
+
+@enduml

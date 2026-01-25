@@ -1,0 +1,9 @@
+@startuml
+!define RECTANGLE class
+
+actor "Representative" as USER
+usecase "Accept/reject proposal" as UC
+
+USER --> UC
+
+@enduml

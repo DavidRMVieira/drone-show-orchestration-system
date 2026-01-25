@@ -1,0 +1,19 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - List Public Figures
+
+actor "CRM Collaborator" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : List Public Figures
+activate System
+
+System --> USER : Show Public Figures
+deactivate System
+
+@enduml

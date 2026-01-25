@@ -1,0 +1,182 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class AddDroneProposalUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class AddDroneProposalController <<application>> {
+        +addDroneProposal(selectedProposalDTO, selectedDroneModelDTO, quantity) : void
+        +listShowProposals() : Iterable<ShowProposalDTO>
+        +listDroneModels() : Iterable<DroneModelDTO>
+    }
+
+    class ListShowProposalService <<application>> {
+        +allShowProposals() : Iterable<ShowProposalDTO>
+        +findShowProposalByID(proposalID) : ShowProposal
+    }
+
+    class ListDroneModelService <<application>> {
+        +allDroneModels() : Iterable<DroneModelDTO>
+        +findDroneModelByName(droneModelName) : DroneModel
+    }
+
+    class ShowProposalDTOParser <<application>> {
+        +transformToDTO(proposals) : Iterable<ShowProposalDTO>
+    }
+
+    class DroneModelDTOParser <<application>> {
+        +transformToDTO(droneModels) : Iterable<DroneModelDTO>
+    }
+}
+
+package "Persistence" {
+    class ShowProposalRepository <<repository>> {
+        +save(proposal) : ShowProposal
+        +findAll() : Iterable<ShowProposal>
+        +ofIdentity(proposalID) : ShowProposal
+    }
+
+    class DroneModelRepository <<repository>> {
+        +findAll() : Iterable<DroneModel>
+        +ofIdentity(droneModelName)) : DroneModel
+    }
+
+    class DroneRepository <<repository>> {
+        +countByModelAndState(droneModel, droneState) : long
+    }
+}
+
+package "DTO" {
+    class ShowProposalDTO <<dto>> {
+    }
+
+    class DroneModelDTO <<dto>> {
+    }
+}
+
+package "Domain" {
+
+package "<<aggregate>> ShowProposal" {
+    class ShowProposal <<entity>> <<root>> {
+        - numberDrones : int
+    }
+
+    class ShowProposalID <<value object>> <<id>> {
+    }
+
+    class Location <<value object>> {
+    }
+
+    class Date <<value object>> {
+    }
+
+    class Duration <<value object>> {
+    }
+
+    class VideoFile <<value object>> {
+    }
+
+    class Language <<value object>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    enum ShowProposalState <<value object>> {
+    }
+
+    class DroneInShow <<value object>> {
+        -quantity : int
+    }
+
+    class FigureInShow <<value object>> {
+        -coordinateX : double
+        -coordinateY : double
+        -coordinateZ : double
+    }
+
+    class FigureCode <<value object>> {
+    }
+
+    class SimulationLog <<entity>> {
+    }
+
+    enum SimulationResult <<value object>> {
+    }
+
+    ShowProposal --> "1" ShowProposalID
+    ShowProposal --> "1" Date
+    ShowProposal --> "1" Location
+    ShowProposal --> "1" Duration
+    ShowProposal --> "1" VideoFile
+    ShowProposal --> "1" Money
+    ShowProposal --> "1" Language
+    ShowProposal --> "1" ShowProposalState
+    ShowProposal --> "*" DroneInShow
+    ShowProposal --> "*" FigureInShow
+    FigureInShow --> "1" FigureCode
+    ShowProposal --> "*" SimulationLog
+    SimulationLog --> "1" Date
+    SimulationLog --> "1" SimulationResult
+}
+
+package "<<aggregate>> Drone" {
+    class Drone <<entity>> <<root>> {
+    }
+
+    enum DroneState <<value object>> {
+    }
+
+    class DroneSerialNumber <<value object>> <<id>> {
+    }
+
+    class AcquisitionDate <<value object>> {
+    }
+
+    Drone --> "1" DroneState
+    Drone --> "1" DroneSerialNumber
+    Drone --> "1" AcquisitionDate
+}
+
+package "<<aggregate>> DroneModel" {
+    class DroneModel <<entity>> <<root>> {
+    }
+
+    class DroneModelName <<value object>> <<id>> {
+    }
+
+    class Manufacturer <<value object>> {
+    }
+
+    DroneModel --> "1" Manufacturer
+    DroneModel --> "1" DroneModelName
+}
+
+Drone "*" --> "1" DroneModel : categories
+DroneInShow "*" -- "1" DroneModel : reference
+}
+
+' Relationships
+AddDroneProposalUI --> AddDroneProposalController : uses
+
+AddDroneProposalController --> ListDroneModelService : droneSvc
+AddDroneProposalController --> ListShowProposalService : proposalSvc
+AddDroneProposalController --> ShowProposalRepository : proposalRepo
+
+AddDroneProposalController --> ShowProposal : proposal
+
+ListShowProposalService --> ShowProposalDTOParser : proposalParser
+ListDroneModelService --> DroneModelDTOParser : droneParser
+
+ListShowProposalService --> ShowProposalRepository : proposalRepo
+ListDroneModelService --> DroneModelRepository : droneModelRepo
+ListDroneModelService --> DroneRepository : droneRepo
+
+ShowProposalDTOParser --> ShowProposalDTO : proposalDTO
+DroneModelDTOParser --> DroneModelDTO : droneModelDTO
+
+@enduml

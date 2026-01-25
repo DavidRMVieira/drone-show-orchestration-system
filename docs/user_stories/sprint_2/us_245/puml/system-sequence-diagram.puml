@@ -1,0 +1,27 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Add Figure Category
+
+autonumber
+
+actor "Show Designer" as SD
+participant ":System" as System
+
+activate SD
+
+    SD -> System : requests to add a figure category
+    activate System
+
+        System --> SD : prompts for category name and description
+    deactivate System
+
+    SD -> System : enters name and description
+    activate System
+
+        System --> SD : displays the new category details or if the provided name \nis already in use, displays an error message
+    deactivate System
+
+@enduml

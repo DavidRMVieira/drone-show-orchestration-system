@@ -1,0 +1,22 @@
+Number of Drones: 1
+
+Drone information:
+
+Drone ID: 0
+Drone Name: drone3_out_of_bonds.txt
+Routine (Duration: 5 steps/time):
+  Step/Time 0 -> (x: 30, y: 400, z: 0)
+  Step/Time 1 -> (x: 30, y: 41, z: 3)
+  Step/Time 2 -> (x: 30, y: 42, z: 1)
+  Step/Time 3 -> (x: 39, y: 43, z: 2)
+  Step/Time 4 -> (x: 38, y: 44, z: 3)
+
+--------------------------------------
+Collisions Information:
+
+There has been 0 collisions!
+
+--------------------------------------
+Figure Validation:
+
+Figure did not pass!

@@ -1,0 +1,34 @@
+DSL version 1.1.23;
+
+DroneType droneTypeA;
+
+Position aPos = (0,0,0);
+Position anotherPos = (0, 10, 0);
+Position vAxis = (0,1,0);
+
+Velocity aVelocity = 5.1;
+Velocity rotVelocity = PI/10;
+
+Distance aLenght = 20;
+
+Line aLine(aPos, aLenght, droneTypeA);
+Rectangle aRectangle(anotherPos, aLenght, aLenght, droneTypeA);
+
+aLine.lightsOn(YELLOW);
+aLine.move((0, 0, 1),30, aVelocity);
+aRectangle.lightsOn(GREEN);
+aRectangle.move((0, 0, 1),40, aVelocity);
+
+group
+aLine.rotate(aPos, vAxis, 2*PI, rotVelocity);
+aRectangle.rotate(aPos, vAxis, -2*PI, rotVelocity);
+endgroup
+
+pause(10);
+
+aLine.lightsOn(RED);
+aRectangle.lightsOn(RED);
+aLine.move((0, 0, -1),30, aVelocity);
+aRectangle.move((0, 0, -1),40, aVelocity);
+aLine.lightsOff;
+aRectangle.lightsOff;

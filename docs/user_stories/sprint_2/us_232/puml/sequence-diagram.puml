@@ -1,0 +1,46 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "CRM Collaborator" as Actor
+participant SearchFigureByCategoryAndKeywordUI as UI <<presentation>>
+participant SearchFigureCatalogueController as Controller <<application>>
+participant FigureDTOParser as DtoParser <<application>>
+database Catalogue as Repository <<repository>>
+
+Actor --> UI: Search Figure By Category And Keyword
+activate UI
+
+    UI --> Actor: Request Category Name and Keyword
+    Actor --> UI: categoryName and keyword
+
+    UI -> Controller: create
+
+        UI -> Controller : searchByCategoryAndKeyword(categoryName, keyword)
+        activate Controller
+
+            note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            note right of Controller : Simplified persistence\n(see specific diagram)
+
+            Controller -> Repository : searchByCategoryAndKeyword(categoryName, keyword)
+            activate Repository
+
+            Repository --> Controller : figures
+            deactivate Repository
+
+            Controller -> DtoParser : transformToDTO(figures)
+            activate DtoParser
+
+            DtoParser --> Controller : figuresDTO
+            deactivate DtoParser
+
+        Controller --> UI : figuresDTO
+        deactivate Controller
+
+UI --> Actor: Show Figures
+deactivate UI
+@enduml

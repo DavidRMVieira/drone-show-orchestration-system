@@ -1,0 +1,67 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "User" as USER
+participant LoginUI as UI <<presentation>>
+participant AuthenticationCredentialHandler as Handler <<application>>
+participant AuthzRegistry as Registry <<utility>>
+participant AuthenticationService as AuthService <<application>>
+participant AuthorizationService as AuthzService <<application>>
+participant UserRepository as Repo <<repository>>
+participant "user:SystemUser" as User <<domain>>
+participant "session:UserSession" as Session <<domain>>
+
+USER -> UI : Request Login
+activate UI
+UI --> USER : Ask login information
+deactivate UI
+
+USER -> UI : Provide username,\npassword, roles
+activate UI
+
+UI -> Handler : authenticated(username,\npassword, requiredRoles)
+activate Handler
+
+Handler -> Registry : authenticationService()
+activate Registry
+Registry --> Handler : authenticationService
+deactivate Registry
+
+Handler -> AuthService : authenticate(username,\npassword, requiredRoles)
+activate AuthService
+
+note right of AuthService : simplified framework implementation
+
+AuthService -> Repo : ofIdentity(username)
+activate Repo
+Repo --> AuthService : user
+deactivate Repo
+
+AuthService -> User : passwordMatches(rawPassword, encoder)\n&& isActive() && hasAny(requiredRoles)
+activate User
+User --> AuthService : true or false
+deactivate User
+
+AuthService -> AuthzService : createSessionForUser(user)
+activate AuthzService
+AuthzService -> Session : create(user)
+activate Session
+Session --> AuthzService : session
+deactivate Session
+AuthzService --> AuthService : user
+deactivate AuthzService
+
+AuthService --> Handler : user
+deactivate AuthService
+
+Handler --> UI : user
+deactivate Handler
+
+UI --> USER : Show session info or error
+deactivate UI
+
+@enduml

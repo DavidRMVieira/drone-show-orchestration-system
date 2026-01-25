@@ -1,0 +1,29 @@
+Language: EN
+
+Representative: Daniel Silva
+Company: Microsoft Ads
+Address: Rua do Porto ; 1111-111 ; Porto ; Portugal
+VAT: AA123456789
+Proposal Number: 12345
+Date: 11-12-2026
+
+Video: https://www.youtube.com/
+Insurance Amount: 330$
+
+CRM Manager: Daniel Silva
+
+Event GPS : +41.1579 ; -8.6291
+Event Date : 11-11-2026
+Event Time : 11:12
+Event Duration : 5
+
+Def Drone
+DroneA - 3
+DroneB1 - 2
+DroneC2 - 1
+End
+
+Def Figure
+-23.5 ; +12.3 ; 12.4 - Fig23
++30.19 ; +151.6 ; 5.4 - Fig4
+End

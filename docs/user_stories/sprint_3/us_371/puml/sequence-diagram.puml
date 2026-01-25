@@ -1,0 +1,107 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+title Sequence Diagram (SD) - Analyze a Show Proposal
+
+actor "Representative" as Actor
+participant "AnalyzeProposalUI" as UI <<presentation>>
+participant EvaluateProposalController as Controller <<application>>
+participant ShowProposalAcceptedEvent as Event <<event>>
+participant EventPublisher as Publisher <<infrastructure>>
+participant ShowProposalAcceptedHandler as Handler <<eventHandler>>
+participant ListShowProposalService as proposalSvc <<application>>
+participant AuthorizationService as authSvc <<application>>
+participant ShowProposalDTOParser as proposalParser <<application>>
+participant ShowProposal as Domain <<domain>>
+database ShowProposalRepository as Repository <<repository>>
+database RepresentativeRepository as representativeRepository <<repository>>
+
+Actor --> UI: Request access to received show proposals
+activate UI
+
+note right of UI : see US370 diagram, it's the same process
+
+UI --> Actor: Display list of their show proposals
+deactivate UI
+
+Actor --> UI: Select a show proposal and decide whether to accept or reject it
+activate UI
+
+    note right of UI : For simplicity, we will address the acceptance scenario
+
+    UI -> Controller: acceptProposal(selectedProposal)
+    activate Controller
+
+    Controller -> proposalSvc: findShowProposalByID(proposalDTO.id)
+    activate proposalSvc
+
+    proposalSvc -> Repository: ofIdentity(id)
+    activate Repository
+
+    Repository --> proposalSvc: proposal
+    deactivate Repository
+
+    proposalSvc --> Controller: proposal
+    deactivate proposalSvc
+
+    Controller -> Domain: isAwaitingResponse()
+    activate Domain
+
+    Domain --> Controller: boolean
+    deactivate Domain
+
+    alt Proposal is not awaiting responde
+        Controller --> UI: IllegalArgumentException
+    end
+
+        Controller -> Event: create(proposalID, representative, customer)
+
+        Controller -> Publisher: publish(event)
+        activate Publisher
+
+        Publisher -> Handler: onEvent(event)
+        activate Handler
+
+        Handler -> proposalSvc: findShowProposalByID(event.proposalID)
+        activate proposalSvc
+
+        proposalSvc -> Repository: ofIdentity(proposalID)
+        activate Repository
+
+        Repository --> proposalSvc: proposal
+        deactivate Repository
+
+        proposalSvc --> Handler: proposal
+        deactivate proposalSvc
+
+        Handler -> Domain: sent(event)
+        activate Domain
+
+        note right of Domain : Changes state to CUSTOMER_ACCEPTED\nAdds event to events collection
+
+        Domain --> Handler: void
+        deactivate Domain
+
+        Handler -> Repository: save(proposal)
+        activate Repository
+
+        Repository --> Handler: proposal
+        deactivate Repository
+
+        Handler --> Publisher: void
+        deactivate Handler
+
+        Publisher --> Controller: void
+        deactivate Publisher
+
+    Controller --> UI: void
+    deactivate Controller
+
+UI --> Actor: Display success or error message
+deactivate UI
+
+@enduml

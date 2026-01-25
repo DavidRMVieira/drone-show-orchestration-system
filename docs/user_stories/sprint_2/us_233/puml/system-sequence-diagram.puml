@@ -1,0 +1,37 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Register Figure
+
+actor "Show Designer" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Add Figure Catalogue
+activate System
+
+System --> USER : Request Figure Code, Figure Type, Figure Version, Keywords, Description, DslDescription, DslVersion
+deactivate System
+
+USER -> System : Provide Figure Code, Figure Type, Figure Version, Keywords, Description, DslDescription, DslVersion
+activate System
+
+System --> USER : Show list of customers
+deactivate System
+
+USER -> System : Select customer
+activate System
+
+System --> USER : Show list of categories
+deactivate System
+
+USER -> System : Select category
+activate System
+
+System --> USER : Display figure info or error
+deactivate System
+
+@enduml

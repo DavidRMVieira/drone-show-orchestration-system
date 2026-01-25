@@ -1,0 +1,9 @@
+@startuml
+!define RECTANGLE class
+
+actor "Drone Tech" as USER
+usecase "Validation of a drone program" as UC
+
+USER --> UC
+
+@enduml

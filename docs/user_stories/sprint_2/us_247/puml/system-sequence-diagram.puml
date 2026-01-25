@@ -1,0 +1,19 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - List Figure Category
+
+actor "Show Designer or CRM Collaborator" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Request List Figure Category
+activate System
+
+System --> USER : Display list of Categories or error
+deactivate System
+
+@enduml

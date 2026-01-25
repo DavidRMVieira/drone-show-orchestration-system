@@ -1,0 +1,97 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "CRM Collaborator" as Actor
+participant RegisterShowRequestUI as UI <<presentation>>
+participant RegisterShowRequestController as Controller <<application>>
+participant ListCustomerService as svcCustomers <<application>>
+participant CustomersDTOParser as DtoParser <<application>>
+participant "Customer" as Customer <<domain>>
+participant ShowRequest as Domain <<domain>>
+participant CustomerDTO as Dto <<dto>>
+database ShowRequestRepository as Repository <<repository>>
+database CustomerRepository as custRepository <<repository>>
+
+Actor --> UI: Register Show Request
+activate UI
+
+    UI -> Controller: listCustomer()
+    activate Controller
+
+    note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+    note right of Controller : Simplified persistence\n(see specific diagram)
+
+        Controller -> svcCustomers: allCustomers()
+        activate svcCustomers
+
+                    svcCustomers -> custRepository : findAll()
+                    activate custRepository
+
+                    custRepository --> svcCustomers : customers
+                    deactivate custRepository
+
+                    svcCustomers -> DtoParser : transformToDTO(customers)
+                    activate DtoParser
+
+                    DtoParser --> svcCustomers : customersDTO
+                    deactivate DtoParser
+
+        svcCustomers --> Controller: customersDTO
+        deactivate svcCustomers
+
+    Controller --> UI: customersDTO
+    deactivate Controller
+
+    UI --> Actor: Show customer list
+    Actor --> UI: Select customer
+
+    UI --> Actor: Provide place, date, duration
+    Actor --> UI: place, date, duration
+
+    UI -> Controller: registerShowRequest(place, date, duration, selectedCustomerDTO)
+    activate Controller
+
+        Controller -> Dto: getVatNumber()
+        activate Dto
+
+        Dto --> Controller: customerVat
+        deactivate Dto
+
+        Controller -> svcCustomers: findCustomerByVatNumber(customerVat)
+        activate svcCustomers
+
+                svcCustomers -> custRepository: ofIdentity(customerVat)
+                activate custRepository
+
+                custRepository --> svcCustomers: customer
+                deactivate custRepository
+
+        svcCustomers --> Controller: customer
+        deactivate svcCustomers
+
+        Controller -> Domain: create(place, date, duration, PENDING, customer)
+
+        Controller -> Repository: save(showRequest)
+        activate Repository
+
+        Repository --> Controller: showRequest
+        deactivate Repository
+
+        Controller -> Domain: toDTO()
+        activate Domain
+
+        Domain --> Controller: showRequestDTO
+        deactivate Domain
+
+        Controller --> UI: showRequestDTO
+    deactivate Controller
+
+UI --> Actor: Display Show Request Info or error
+deactivate UI
+
+@enduml

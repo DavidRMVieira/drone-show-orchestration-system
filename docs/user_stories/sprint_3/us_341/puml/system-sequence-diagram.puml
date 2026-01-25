@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Validate DSL Description
+
+actor "Show Designer" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Validate DSL Description
+activate System
+
+System --> USER : Request DSL Version and file name
+deactivate System
+
+USER -> System : Provide DSL Version and file name
+activate System
+
+System --> USER : Display figure document or error
+deactivate System
+
+@enduml

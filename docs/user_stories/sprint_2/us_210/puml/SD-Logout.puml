@@ -1,0 +1,32 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "User" as USER
+participant LogoutUI as UI <<presentation>>
+participant AuthzRegistry as Registry <<utility>>
+participant AuthenticationService as AuthService <<application>>
+
+USER -> UI : Request Logout
+activate UI
+
+UI -> Registry : authenticationService()
+activate Registry
+Registry --> UI : authenticationService
+deactivate Registry
+
+UI -> AuthService : clearSession()
+activate AuthService
+
+note right of AuthService : framework\nimplementation
+
+AuthService --> UI :
+deactivate AuthService
+
+UI --> USER : Show logout message or error
+deactivate UI
+
+@enduml

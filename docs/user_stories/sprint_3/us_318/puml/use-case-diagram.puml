@@ -1,0 +1,11 @@
+"@startuml
+!define RECTANGLE class
+
+actor "CRM Manager" as USER
+usecase "Register Proposal Template" as UC
+
+USER --> UC
+
+@enduml"
+
+isto é o use case diagram da US 318

@@ -1,0 +1,20 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "<<aggregate>> DroneLanguagePlugin" {
+    class DroneLanguagePlugin <<entity>> {
+    }
+
+    class FQClassName <<value object>> {
+    }
+
+    class DroneLanguageVersion <<value object>> <<id>> {
+    }
+
+    DroneLanguagePlugin --> "1" FQClassName
+    DroneLanguagePlugin --> "1" DroneLanguageVersion
+}
+
+@enduml

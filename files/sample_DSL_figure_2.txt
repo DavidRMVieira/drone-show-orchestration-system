@@ -1,0 +1,32 @@
+DSL version 1.1.23;
+
+DroneType droneTypeA;
+
+Position aPos = (0,0,0);
+Position anotherPos = (0, 10, 0);
+Position yAxis = (0,1,0);
+
+Velocity aVelocity = 6;
+Velocity rotVelocity = PI/10;
+
+Distance aLenght = 20;
+
+Rectangle aRectangle(anotherPos, aLenght, aLenght, droneTypeA);
+
+before
+   aRectangle.lightsOn(GREEN);
+   aRectangle.move((0, 0, 1),50, aVelocity);
+endbefore
+
+
+aRectangle.rotate(aPos, yAxis, -2*PI, rotVelocity);
+
+pause(10);
+
+
+aRectangle.lightsOn(RED);
+
+after
+   aRectangle.move((0, 0, -1),50, aVelocity);
+   aRectangle.lightsOff;
+endafter

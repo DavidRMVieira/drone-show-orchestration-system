@@ -1,0 +1,51 @@
+"@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class RegisterProposalTemplateUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class RegisterProposalTemplateController <<application>> {
+        +registerProposalTemplate(templateVersion, className) : ProposalTemplate
+    }
+}
+
+package "Persistence" {
+    class ProposalTemplateRepository <<repository>> {
+        +save(ProposalTemplate) : ProposalTemplate
+    }
+}
+
+package "Domain" {
+
+package "<<aggregate>> ProposalTemplate" {
+    class ProposalTemplate <<entity>> {
+    }
+
+    class FQClassName <<value object>> {
+    }
+
+    class ProposalTemplateVersion <<value object>> <<id>> {
+    }
+
+    ProposalTemplate --> "1" FQClassName
+    ProposalTemplate --> "1" ProposalTemplateVersion
+}
+}
+
+' Relationships
+RegisterProposalTemplateUI --> RegisterProposalTemplateController : uses
+
+RegisterProposalTemplateController --> ProposalTemplateRepository : repository
+
+RegisterProposalTemplateController --> ProposalTemplate : ProposalTemplate
+
+ProposalTemplateRepository --> ProposalTemplate : ProposalTemplate
+
+@enduml
+"
+
+este é o class diagram da US 318

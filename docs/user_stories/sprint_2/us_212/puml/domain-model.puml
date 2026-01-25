@@ -1,0 +1,60 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+    package "<<aggregate>> ShodroneUser" {
+        class ShodroneUser <<entity>> <<root>> {
+        }
+
+        class ShodroneEmail <<value object>> <<id>> {
+        }
+
+        class PhoneNumber <<value object>> {
+        }
+    }
+
+    package "<<aggregate>> SystemUser" {
+        class SystemUser <<entity>> <<root>> {
+            -active : boolean
+        }
+
+        class Username <<value object>> <<id>> {
+        }
+
+        class Password <<value object>> {
+        }
+
+        class Name <<value object>> {
+        }
+
+        class EmailAddress <<value object>> {
+        }
+
+        class RoleSet {
+        }
+
+        interface Set <<interface>> {
+        }
+
+        class RoleAssigment <<entity>> {
+        }
+
+        class Role <<value object>> {
+        }
+    }
+
+ShodroneUser --> ShodroneEmail
+ShodroneUser --> PhoneNumber
+ShodroneUser --> SystemUser : has
+
+SystemUser --> Username
+SystemUser --> Password
+SystemUser --> Name
+SystemUser --> EmailAddress
+SystemUser --> RoleSet
+RoleSet ..|> Set
+Set ..> RoleAssigment
+RoleAssigment --> Role
+
+@enduml

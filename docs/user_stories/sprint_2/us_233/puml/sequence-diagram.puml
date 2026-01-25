@@ -1,0 +1,146 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "Show Designer" as Actor
+participant AddFigureCatalogueUI as UI <<presentation>>
+participant AddFigureCatalogueController as Controller <<application>>
+participant ListCustomerService as svcCustomers <<application>>
+participant ListFigureCategoryService as svcCategories <<application>>
+participant CustomersDTOParser as cusDtoParser <<application>>
+participant FigureCategoryDTOParser as catDtoParser <<application>>
+participant "Customer" as Customer <<domain>>
+participant Figure as Domain <<domain>>
+participant CustomerDTO as cusDto <<dto>>
+participant FigureCategoryDTO as catDto <<dto>>
+database Catalogue as Repository <<repository>>
+database CustomerRepository as custRepository <<repository>>
+database FigureCategoryRepository as cateRepository <<repository>>
+
+Actor --> UI: Add Figure Catalogue
+activate UI
+
+    UI --> Actor: Request Figure Code, Figure Type, Figure Version, Keywords, Description, DslDescription, DslVersion
+    Actor --> UI: figureCode, figureType, figureVersion, keywords, description, dslDescription, dslVersion
+
+    UI -> Controller: listCustomer()
+    activate Controller
+
+    note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+    note right of Controller : Simplified persistence\n(see specific diagram)
+
+        Controller -> svcCustomers: allCustomers()
+        activate svcCustomers
+
+                    svcCustomers -> custRepository : findAll()
+                    activate custRepository
+
+                    custRepository --> svcCustomers : customers
+                    deactivate custRepository
+
+                    svcCustomers -> cusDtoParser : transformToDTO(customers)
+                    activate cusDtoParser
+
+                    cusDtoParser --> svcCustomers : customersDTO
+                    deactivate cusDtoParser
+
+        svcCustomers --> Controller: customersDTO
+        deactivate svcCustomers
+
+    Controller --> UI: customersDTO
+    deactivate Controller
+
+    UI --> Actor: Show customer list
+    Actor --> UI: Select customer
+
+    UI -> Controller: allActiveCategories()
+    activate Controller
+
+        Controller -> svcCategories: allActiveFigureCategories()
+        activate svcCategories
+
+                    svcCategories -> cateRepository : findAll()
+                    activate cateRepository
+
+                    cateRepository --> svcCategories : categories
+                    deactivate cateRepository
+
+                    svcCategories -> catDtoParser : transformToDTO(categories)
+                    activate catDtoParser
+
+                    catDtoParser --> svcCategories : categoriesDTO
+                    deactivate catDtoParser
+
+        svcCategories --> Controller: categoriesDTO
+        deactivate svcCategories
+
+    Controller --> UI: categoriesDTO
+    deactivate Controller
+
+    UI --> Actor: Show category list
+    Actor --> UI: Select category
+
+    UI -> Controller: addFigureToCatalogue(figureCode, figureType, figureVersion, keywords, description, dslDescription, dslVersion, customerDTO, categoryDTO)
+    activate Controller
+
+        Controller -> cusDto: getVatNumber()
+        activate cusDto
+
+        cusDto --> Controller: customerVat
+        deactivate cusDto
+
+        Controller -> svcCustomers: findCustomerByVatNumber(customerVat)
+        activate svcCustomers
+
+                svcCustomers -> custRepository: ofIdentity(customerVat)
+                activate custRepository
+
+                custRepository --> svcCustomers: customer
+                deactivate custRepository
+
+        svcCustomers --> Controller: customer
+        deactivate svcCustomers
+
+        Controller -> catDto: getName()
+        activate catDto
+
+        catDto --> Controller: categoryName
+        deactivate catDto
+
+        Controller -> svcCategories: findFigureCategoryByName(categoryName)
+        activate svcCategories
+
+                svcCategories -> custRepository: ofIdentity(categoryName)
+                activate custRepository
+
+                custRepository --> svcCategories: category
+                deactivate custRepository
+
+        svcCategories --> Controller: category
+        deactivate svcCategories
+
+        Controller -> Domain: create(figureCode, figureType, figureVersion, keywords, description, dslDescription, dslVersion, customer, category)
+
+        Controller -> Repository: save(figure)
+        activate Repository
+
+        Repository --> Controller: figure
+        deactivate Repository
+
+        Controller -> Domain: toDTO()
+        activate Domain
+
+        Domain --> Controller: figureDTO
+        deactivate Domain
+
+        Controller --> UI: figureDTO
+    deactivate Controller
+
+UI --> Actor: Display Figure Info or error
+deactivate UI
+
+@enduml

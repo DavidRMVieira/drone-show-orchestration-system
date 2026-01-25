@@ -1,0 +1,19 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Logout
+
+actor "User" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Request logout
+activate System
+
+System --> USER : Show logout message or error
+deactivate System
+
+@enduml

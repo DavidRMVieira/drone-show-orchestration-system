@@ -1,0 +1,45 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Create Show Proposal
+
+actor "CRM Collaborator" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Create Show Proposal
+activate System
+
+System --> USER : Show list of show requests
+deactivate System
+
+USER -> System : Select show request
+activate System
+
+System --> USER : Ask if proposal is exclusive to a representative
+deactivate System
+
+USER -> System : Answer (Yes or No)
+activate System
+
+alt Proposal is exclusive
+    System --> USER : Show list of customer representatives
+    deactivate System
+
+    USER -> System : Select representative
+    activate System
+end
+
+System --> USER : Request location, date, duration, number of drones, language and insurance amount
+deactivate System
+
+USER -> System : Provide location, date, duration, number of drones, language and insurance amount
+activate System
+
+System --> USER : Display show proposal info or error
+deactivate System
+
+@enduml

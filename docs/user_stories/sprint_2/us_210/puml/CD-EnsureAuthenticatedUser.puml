@@ -1,0 +1,21 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+class "{NameOfUC}X" <<application>> {
+}
+
+class AuthorizationService <<service>> {
+    + ensureAuthenticatedUserHasAnyOf(roles)
+}
+
+class AuthzRegistry <<utility>> {
+    + authorizationService() : AuthorizationService
+}
+
+"{NameOfUC}X" ..> AuthzRegistry
+"{NameOfUC}X" ..> AuthorizationService
+AuthzRegistry --> AuthorizationService : authorizationSvc
+
+@enduml

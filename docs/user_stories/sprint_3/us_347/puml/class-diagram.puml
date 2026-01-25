@@ -1,0 +1,154 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class ValidateProposalDocumentUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class ValidateProposalDocumentController <<application>> {
+        +validateProposalDocument(selectedShowProposalDTO, language, proposalTemplateVersion) : String
+        +listShowProposals() : Iterable<ShowProposalDTO>
+    }
+
+    class GenerateProposalDocumentService <<application>> {
+        +validateProposalDocument(proposal, language, proposalTemplateVersion) : String
+        -buildImporter(className) : ProposalTemplateImporter
+        -generateProposalFile(proposal, language) : File
+    }
+
+    class ListShowProposalService <<application>> {
+        +allShowProposals() : Iterable<ShowProposalDTO>
+        +findShowProposalByID(proposalID) : ShowProposal
+    }
+
+    class ProposalTemplateImporter <<application>> {
+        +importFrom(content) : String
+    }
+
+    class ShowProposalDTOParser <<application>> {
+        +transformToDTO(proposals) : Iterable<ShowProposalDTO>
+    }
+}
+
+package "Persistence" {
+    class ShowProposalRepository <<repository>> {
+        +findAll() : Iterable<ShowProposal>
+        +findShowProposalByID(proposalID) : ShowProposal
+        +save(proposal) : ShowProposal
+    }
+
+    class ProposalTemplateRepository <<repository>> {
+        +ofIdentity(proposalTemplateVersion) : ProposalTemplate
+    }
+}
+
+package "Domain" {
+
+package "<<aggregate>> ProposalTemplate" {
+    class ProposalTemplate <<entity>> {
+    }
+
+    class FQClassName <<value object>> {
+    }
+
+    class ProposalTemplateVersion <<value object>> <<id>> {
+    }
+
+    ProposalTemplate --> "1" FQClassName
+    ProposalTemplate --> "1" ProposalTemplateVersion
+}
+
+package "<<aggregate>> ShowProposal" {
+    class ShowProposal <<entity>> <<root>> {
+        - numberDrones : int
+        +markAsReadyToSend() : void
+    }
+
+    class ShowProposalID <<value object>> <<id>> {
+    }
+
+    class Location <<value object>> {
+    }
+
+    class Date <<value object>> {
+    }
+
+    class Duration <<value object>> {
+    }
+
+    class VideoFile <<value object>> {
+    }
+
+    class Language <<value object>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    enum ShowProposalState <<value object>> {
+    }
+
+    class DroneInShow <<value object>> {
+        -quantity : int
+    }
+
+    class FigureInShow <<value object>> {
+        -coordinateX : double
+        -coordinateY : double
+        -coordinateZ : double
+    }
+
+    class DroneModelName <<value object>> {
+    }
+
+    class FigureCode <<value object>> {
+    }
+
+    class SimulationLog <<entity>> {
+    }
+
+    enum SimulationResult <<value object>> {
+    }
+
+    ShowProposal --> "1" ShowProposalID
+    ShowProposal --> "1" Date
+    ShowProposal --> "1" Location
+    ShowProposal --> "1" Duration
+    ShowProposal --> "1" VideoFile
+    ShowProposal --> "1" Money
+    ShowProposal --> "1" Language
+    ShowProposal --> "1" ShowProposalState
+    ShowProposal --> "*" DroneInShow
+    ShowProposal --> "*" FigureInShow
+    DroneInShow --> "1" DroneModelName
+    FigureInShow --> "1" FigureCode
+    ShowProposal --> "*" SimulationLog
+    SimulationLog --> "1" Date
+    SimulationLog --> "1" SimulationResult
+}
+}
+
+package "DTO" {
+    class ShowProposalDTO <<dto>> {
+    }
+}
+
+' Relationships
+ValidateProposalDocumentUI --> ValidateProposalDocumentController : uses
+
+ValidateProposalDocumentController --> ShowProposalRepository : proposalRepo
+ValidateProposalDocumentController --> GenerateProposalDocumentService : documentSvc
+ValidateProposalDocumentController --> ListShowProposalService : proposalSvc
+
+ShowProposalRepository --> ShowProposal : proposal
+ProposalTemplateRepository --> ProposalTemplate : proposalTemplatePlugin
+ListShowProposalService --> ShowProposalDTOParser : proposalParser
+ShowProposalDTOParser --> ShowProposalDTO : proposalDTO
+ShowProposalDTOParser --> ShowProposalRepository : proposalRepo
+GenerateProposalDocumentService --> ProposalTemplateRepository : pluginRepo
+GenerateProposalDocumentService --> ProposalTemplateImporter : importer
+
+@enduml

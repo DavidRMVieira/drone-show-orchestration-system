@@ -1,0 +1,55 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "<<aggregate>> FigureCategory" {
+    class FigureCategory <<entity>> <<root>> {
+        -boolean : active
+    }
+
+    class Designation <<value object>> {
+    }
+
+    class Description <<entity>> {
+    }
+
+    FigureCategory --> "1" Designation
+    FigureCategory --> "1" Description
+}
+
+package "<<aggregate>> Figure" {
+    class Figure <<entity>> <<root>> {
+        - <<VO>> Description
+    }
+
+    class FigureCode <<value object>> {
+    }
+
+    enum FigureType <<value object>> {
+    }
+
+    class FigureVersion <<value object>> {
+    }
+
+    class DSL <<entity>> {
+        - <<VO>> Description
+    }
+
+    class DSLId <<value object>> {
+    }
+
+    class DSLVersion <<value object>> {
+    }
+
+    Figure --> "1" FigureCode
+    Figure --> "1" FigureType
+    Figure --> "1" FigureVersion
+    Figure --> "1" DSL
+    DSL --> "1" DSLId
+    DSL --> "1" DSLVersion
+}
+
+Figure "*" --> "1" FigureCategory : categories
+
+@enduml

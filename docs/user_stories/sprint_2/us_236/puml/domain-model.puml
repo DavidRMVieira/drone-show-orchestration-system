@@ -1,0 +1,32 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "<<aggregate>> ShowRequest" {
+    class ShowRequest <<entity>> <<root>> {
+    }
+
+    class ShowRequestID <<id>> {
+    }
+
+    class Place <<value object>> {
+    }
+
+    class Date <<value object>> {
+    }
+
+    class Duration <<value object>> {
+    }
+
+    enum RequestState <<value object>> {
+    }
+
+    ShowRequest --> "1" ShowRequestID
+    ShowRequest --> "1" Date
+    ShowRequest --> "1" Place
+    ShowRequest --> "1" Duration
+    ShowRequest --> "1" RequestState
+}
+
+@enduml

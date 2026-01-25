@@ -1,0 +1,66 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class ChangeFigureCategoryUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class ChangeFigureCategoryController <<application>> {
+        +changeFigureCategoryName(name, description) : FigureCategoryDTO
+        +changeFigureCategoryDescription(description) : FigureCategoryDTO
+        +allFigureCategories() : Iterable<FigureCategoryDTO>
+    }
+
+    class ListFigureCategoryService <<application>> {
+        +allFigureCategories() : Iterable<FigureCategoryDTO>
+    }
+
+    class FigureCategoryDTOParser <<application>> {
+        +transformToDTO(categories) : Iterable<FigureCategoryDTO>
+        +valueOf(categoryName) : FigureCategory
+    }
+}
+
+package "dto" {
+    class FigureCategoryDTO <<dto>> {
+    }
+}
+
+package "Domain" {
+    class FigureCategory <<entity>> <<root>> {
+        +changeNameTo(newName) : void
+        +changeDescriptionTo(newDescription) : void
+        +toDTO() : FigureCategoryDTO
+    }
+    class Designation <<value object>> {
+    }
+    class Description <<value object>> {
+    }
+
+    FigureCategory --> Designation
+    FigureCategory --> Description
+}
+
+package "Persistence" {
+    class FigureCategoryRepository <<repository>> {
+        +save(category) : FigureCategory
+        +ofIdentity(categoryName) : FigureCategory
+    }
+}
+
+ChangeFigureCategoryUI --> ChangeFigureCategoryController
+ChangeFigureCategoryController --> FigureCategoryRepository : repo
+ListFigureCategoryService --> FigureCategoryRepository : repo
+ChangeFigureCategoryController --> ListFigureCategoryService : svc
+ChangeFigureCategoryController --> FigureCategoryDTO : categoryDTO
+ChangeFigureCategoryController --> FigureCategory : category
+FigureCategory --> FigureCategoryDTO
+
+ChangeFigureCategoryController --> FigureCategoryDTOParser : parser
+ListFigureCategoryService --> FigureCategoryDTOParser : parser
+FigureCategoryDTOParser --> FigureCategoryDTO : categoryDTO
+
+@enduml

@@ -1,0 +1,137 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class EditShowRequestAction <<presentation>> {
+        +execute(): boolean
+    }
+
+    class EditShowRequestUI <<presentation>> {
+        -controller: EditShowRequestController
+        +doShow(): boolean
+        +headline(): String
+    }
+}
+
+package "Application" {
+    class EditShowRequestController <<application>> {
+        -authz: AuthorizationService
+        -showRequestRepository: ShowRequestRepository
+
+        +allShowRequests(): Iterable<ShowRequestDTO>
+        +changeShowRequestPlace(newPlace: String, showRequestDTO: ShowRequestDTO): ShowRequestDTO
+        +changeShowRequestDate(newDate: Date, showRequestDTO: ShowRequestDTO): ShowRequestDTO
+        +changeShowRequestDuration(newDuration: int, showRequestDTO: ShowRequestDTO): ShowRequestDTO
+        +changeShowRequestState(newState: ShowRequestState, showRequestDTO: ShowRequestDTO): ShowRequestDTO
+    }
+
+    class AuthzRegistry <<utility>> {
+        +authorizationService(): AuthorizationService
+    }
+
+    class AuthorizationService <<application>> {
+        +ensureAuthenticatedUserHasAnyOf(roles: List<String>): void
+    }
+}
+
+package "Domain" {
+    class ShodroneRoles {
+        +POWER_USER
+        +CRM_COLLABORATOR
+    }
+
+    package "<<aggregate>> ShowRequest" {
+        class ShowRequest <<entity>> <<root>> {
+            -id: Long
+            -version: Long
+            -place: Place
+            -date: Date
+            -duration: Duration
+            -state: ShowRequestState
+            -customer: Customer
+
+            +changePlaceTo(newPlace: Place): void
+            +changeDateTo(newDate: Date): void
+            +changeDurationTo(newDuration: Duration): void
+            +changeStateTo(newState: ShowRequestState): void
+            +customer(): Customer
+            +identity(): Long
+            +toDTO(): ShowRequestDTO
+        }
+
+        class ShowRequestState <<enumeration>>
+
+        class Customer <<entity>> {
+            -vat: String
+            -name: String
+
+            +VAT(): String
+            +name(): String
+            +identity(): String
+        }
+
+        class Place <<value object>> {
+            -name: String
+            +valueOf(name: String): Place
+            +name(): String
+        }
+
+        class Duration <<value object>> {
+            -minutes: int
+            +valueOf(minutes: int): Duration
+            +inMinutes(): int
+        }
+    }
+}
+
+package "DTO" {
+    class ShowRequestDTO {
+        -id: Long
+        -place: String
+        -duration: String
+        -date: Date
+        -state: String
+        -customer: String
+
+        +ShowRequestDTO(id, place, duration, date, state, customer)
+    }
+
+    class ShowRequestDTOParser <<utility>> {
+        +valueOf(showRequestDTO: ShowRequestDTO): ShowRequest
+        +transformToDTO(showRequests: Iterable<ShowRequest>): Iterable<ShowRequestDTO>
+    }
+
+    class ShowRequestDTOPrinter <<utility>> {
+        +header(): String
+        +visit(showRequestDTO: ShowRequestDTO): void
+    }
+}
+
+package "Persistence" {
+    class ShowRequestRepository <<repository>> {
+        +findAll(): Iterable<ShowRequest>
+        +save(showRequest: ShowRequest): ShowRequest
+    }
+}
+
+' Relações
+
+EditShowRequestAction --> EditShowRequestUI : uses
+EditShowRequestUI --> EditShowRequestController : uses
+EditShowRequestController --> ShowRequestRepository : repo
+EditShowRequestController --> AuthorizationService : authz
+EditShowRequestController ..> AuthzRegistry
+EditShowRequestController --> ShodroneRoles : roles
+
+ShowRequest --> Place
+ShowRequest --> Duration
+ShowRequest --> ShowRequestState
+ShowRequest --> Customer
+
+ShowRequestDTOParser ..> ShowRequestDTO
+ShowRequestDTOParser ..> ShowRequest
+
+ShowRequestDTOPrinter ..> ShowRequestDTO
+
+@enduml

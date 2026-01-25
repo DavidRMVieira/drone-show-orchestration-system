@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Login
+
+actor "User" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Request login
+activate System
+
+System --> USER : Ask login information
+deactivate System
+
+USER -> System : Provide username, password
+activate System
+
+System --> USER : Show session info or error
+deactivate System
+
+@enduml

@@ -1,0 +1,40 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "Show Designer" as Actor
+participant ValidateDSLDescriptionUI as UI <<presentation>>
+participant ValidateDSLDescriptionController as Controller <<application>>
+participant GenerateFigureDocumentService as svc <<application>>>
+
+Actor --> UI: Validate DSL Description
+activate UI
+
+UI --> Actor: Request DSL Version and file name
+Actor --> UI: Provide DSL Version and file name
+
+    UI -> Controller: generateFigureDocument(dslVersion, fileName)
+    activate Controller
+
+        Controller -> svc: generateFigureDocument(figure, dslVersion, fileName)
+        activate svc
+
+                svc -> svc: generateDocumentFile(figure, dslVersion, fileName)
+                activate svc
+
+                svc --> svc: documentContent
+                deactivate svc
+
+        svc --> Controller: documentContent
+        deactivate svc
+
+    Controller --> UI: documentContent
+    deactivate Controller
+
+UI --> Actor: Display figure document or error
+deactivate UI
+
+@enduml

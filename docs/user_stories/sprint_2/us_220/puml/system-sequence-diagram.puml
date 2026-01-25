@@ -1,0 +1,37 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Register Customer
+
+actor "CRM Collaborator" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Register Customer
+activate System
+
+System --> USER : Ask customer information
+deactivate System
+
+USER -> System : VAT Number, First Name, Last Name, \nStreet, City, Postal Code, Country
+activate System
+
+System --> USER : Show List of \nCustomer Types
+deactivate System
+
+USER -> System : Customer Type
+activate System
+
+System --> USER : Ask representative information
+deactivate System
+
+USER -> System : First Name, Last Name, Email, Phone Number, \nPosition, Shodrone Email, Password
+activate System
+
+System --> USER : Display Customer and Representative Info or error
+deactivate System
+
+@enduml

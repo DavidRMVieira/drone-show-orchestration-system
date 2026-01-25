@@ -1,0 +1,43 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor Admin as Actor
+participant ListUsersUI as UI <<presentation>>
+participant ListUsersController as Controller <<application>>
+participant ShodroneUserDTOParser as shoDtoParser <<application>>
+participant "shodroneUserDTO:ShodroneUserDTO" as DTO <<dto>>
+database ShodroneUserRepository as Repository <<repository>>
+
+Actor --> UI: List Users
+activate UI
+    UI -> Controller: create
+
+        UI -> Controller : listUsers()
+        activate Controller
+
+            note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            note right of Controller : Simplified persistence\n(see specific diagram)
+
+            Controller -> Repository : findAll()
+            activate Repository
+
+            Repository --> Controller : users
+            deactivate Repository
+
+            Controller -> shoDtoParser : transformToDTO(users)
+            activate shoDtoParser
+
+            shoDtoParser --> Controller : usersDTO
+            deactivate shoDtoParser
+
+        Controller --> UI : usersDTO
+        deactivate Controller
+
+UI --> Actor: Show Users
+deactivate UI
+@enduml

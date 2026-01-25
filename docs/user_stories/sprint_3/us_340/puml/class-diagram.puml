@@ -1,0 +1,48 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class RegisterDSLPluginUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class RegisterDSLPluginController <<application>> {
+        +registerDSLPlugin(dslVersion, className) : DSLPlugin
+    }
+}
+
+package "Persistence" {
+    class DSLPluginRepository <<repository>> {
+        +save(DSLPlugin) : DSLPlugin
+    }
+}
+
+package "Domain" {
+
+package "<<aggregate>> DSLPlugin" {
+    class DSLPlugin <<entity>> {
+    }
+
+    class FQClassName <<value object>> {
+    }
+
+    class DSLVersion <<value object>> <<id>> {
+    }
+
+    DSLPlugin --> "1" FQClassName
+    DSLPlugin --> "1" DSLVersion
+}
+}
+
+' Relationships
+RegisterDSLPluginUI --> RegisterDSLPluginController : uses
+
+RegisterDSLPluginController --> DSLPluginRepository : repository
+
+RegisterDSLPluginController --> DSLPlugin : DSLPlugin
+
+DSLPluginRepository --> DSLPlugin : DSLPlugin
+
+@enduml

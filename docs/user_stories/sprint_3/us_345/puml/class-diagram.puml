@@ -1,0 +1,48 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class RegisterDroneLanguagePluginUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class RegisterDroneLanguagePluginController <<application>> {
+        +registerDroneLanguagePlugin(droneLanguage, className) : DroneLanguagePlugin
+    }
+}
+
+package "Persistence" {
+    class DroneLanguagePluginRepository <<repository>> {
+        +save(DroneLanguagePlugin) : DroneLanguagePlugin
+    }
+}
+
+package "Domain" {
+
+package "<<aggregate>> DroneLanguagePlugin" {
+    class DroneLanguagePlugin <<entity>> {
+    }
+
+    class FQClassName <<value object>> {
+    }
+
+    class DroneLanguage <<value object>> <<id>> {
+    }
+
+    DroneLanguagePlugin --> "1" FQClassName
+    DroneLanguagePlugin --> "1" DroneLanguage
+}
+}
+
+' Relationships
+RegisterDroneLanguagePluginUI --> RegisterDroneLanguagePluginController : uses
+
+RegisterDroneLanguagePluginController --> DroneLanguagePluginRepository : repository
+
+RegisterDroneLanguagePluginController --> DroneLanguagePlugin : DroneLanguagePlugin
+
+DroneLanguagePluginRepository --> DroneLanguagePlugin : DroneLanguagePlugin
+
+@enduml

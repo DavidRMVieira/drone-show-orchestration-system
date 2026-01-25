@@ -1,0 +1,132 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "Show Designer" as Actor
+participant ChangeFigureCategoryUI as UI <<presentation>>
+participant ChangeFigureCategoryController as Controller <<application>>
+participant ListFigureCategoryService as svc <<application>>
+participant FigureCategoryDTOParser as Parser <<application>>
+participant FigureCategoryDTO as Dto <<dto>>
+participant FigureCategory as Domain <<domain>>
+database FigureCategoryRepository as Repo <<repository>>
+
+Actor --> UI: Request to Change Figure Category
+activate UI
+
+    UI -> Controller: allFigureCategories()
+    activate Controller
+
+    note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+    note right of Controller : Simplified persistence\n(see specific diagram)
+
+        Controller -> svc: allFigureCategories()
+        activate svc
+
+                    svc -> Repo : findAll()
+                    activate Repo
+
+                    Repo --> svc : categories
+                    deactivate Repo
+
+                    svc -> Parser : transformToDTO(categories)
+                    activate Parser
+
+                    Parser --> svc : categoriesDTO
+                    deactivate Parser
+
+        svc --> Controller: categoriesDTO
+        deactivate svc
+
+    Controller --> UI: categoriesDTO
+    deactivate Controller
+
+    UI --> Actor: Display list of categories
+    Actor --> UI: Select Category
+
+    UI --> Actor: Display Category Name
+    Actor --> UI: Provide new name
+
+    UI -> Controller: changeFigureCategoryName(newName, categoryDTO)
+    activate Controller
+
+        Controller -> Parser: valueOf(categoryDTO)
+        activate Parser
+
+                Parser -> Dto: getName()
+                activate Dto
+
+                Dto --> Parser: categoryName
+                deactivate Dto
+
+                Parser -> Repo: ofIdentity(categoryName)
+                activate Repo
+
+                Repo --> Parser: category
+                deactivate Repo
+
+        Parser --> Controller: category
+        deactivate Parser
+
+        Controller -> Domain: changeNameTo(newName)
+        activate Domain
+
+        Domain --> Controller: void
+        deactivate Domain
+
+        Controller -> Domain: toDTO()
+        activate Domain
+
+        Domain --> Controller: categoryDTO
+        deactivate Domain
+
+    Controller --> UI: categoryDTO
+    deactivate Controller
+
+    UI --> Actor: Display Category Description
+    Actor --> UI: Provide new description
+
+    UI -> Controller: changeFigureCategoryDescription(newDescription, categoryDTO)
+    activate Controller
+
+        Controller -> Parser: valueOf(categoryDTO)
+        activate Parser
+
+                Parser -> Dto: getName()
+                activate Dto
+
+                Dto --> Parser: categoryName
+                deactivate Dto
+
+                Parser -> Repo: ofIdentity(categoryName)
+                activate Repo
+
+                Repo --> Parser: category
+                deactivate Repo
+
+        Parser --> Controller: category
+        deactivate Parser
+
+        Controller -> Domain: changeDescriptionTo(newDescription)
+        activate Domain
+
+        Domain --> Controller: void
+        deactivate Domain
+
+        Controller -> Domain: toDTO()
+        activate Domain
+
+        Domain --> Controller: categoryDTO
+        deactivate Domain
+
+    Controller --> UI: categoryDTO
+    deactivate Controller
+
+    UI --> Actor: Figure Category updated info or error message
+
+deactivate UI
+@enduml

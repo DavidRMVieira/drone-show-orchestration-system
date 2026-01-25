@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Register Drone Language Plugin
+
+actor "Drone Tech" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Register Drone Language Plugin
+activate System
+
+System --> USER : Request Drone Language and Class Name
+deactivate System
+
+USER -> System : Provide Drone Language and Class Name
+activate System
+
+System --> USER : Display plugin info or error
+deactivate System
+
+@enduml

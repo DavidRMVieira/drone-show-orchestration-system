@@ -1,0 +1,10 @@
+@startuml
+!define RECTANGLE class
+
+actor "CRM Collaborator" as USER
+
+usecase "List public figures in Figure catalogue" as UC
+
+USER --> UC
+
+@enduml

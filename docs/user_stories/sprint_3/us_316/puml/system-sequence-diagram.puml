@@ -1,0 +1,33 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Create Show Proposal
+
+actor "CRM Collaborator" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Send Show Proposal
+activate System
+
+System --> USER : Show list of show proposals
+deactivate System
+
+USER -> System : Select show proposal
+activate System
+
+System --> USER : Show language options
+deactivate System
+
+USER -> System : Select language
+activate System
+
+USER -> System : Select template version
+
+System --> USER : Display success message or error
+deactivate System
+
+@enduml

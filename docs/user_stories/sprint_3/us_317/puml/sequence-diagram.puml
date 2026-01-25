@@ -1,0 +1,124 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "CRM Collaborator" as Actor
+participant AcceptProposalByCollaboratorUI as UI <<presentation>>
+participant AcceptProposalByCollaboratorController as Controller <<application>>
+participant ShowProposalAcceptedByCRMEvent as Event <<event>>
+participant EventPublisher as Publisher <<infrastructure>>
+participant ShowProposalAcceptedCRMHandler as Handler <<eventHandler>>
+participant ListShowProposalService as ListService <<application>>
+participant ShowProposalDTOParser as Parser <<application>>
+participant ShowProposal as Domain <<domain>>
+database ShowProposalRepository as Repository <<repository>>
+
+Actor -> UI: Accept Show Proposal
+activate UI
+
+    UI -> Controller: checkPendingProposalAcceptedByCustomer()
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+        note right of Controller : Simplified persistence\n(see specific diagram)
+
+    Controller -> ListService: allProposalsCustomerAccepted()
+    activate ListService
+
+    ListService -> Repository: findProposalsCustomerAccepted()
+    activate Repository
+
+    Repository --> ListService: proposals
+    deactivate Repository
+
+    ListService -> Parser: transformToDTO(proposals)
+    activate Parser
+
+    Parser --> ListService: proposalsDTO
+    deactivate Parser
+
+    ListService --> Controller: proposalsDTO
+    deactivate ListService
+
+    Controller --> UI: proposalsDTO
+    deactivate Controller
+
+UI --> Actor: Show list of proposals
+Actor -> UI: Select proposal
+
+    UI -> Controller: acceptProposalByCollaborator(selectedProposal)
+    activate Controller
+
+    Controller -> ListService: findShowProposalByID(proposalDTO.id)
+    activate ListService
+
+    ListService -> Repository: ofIdentity(id)
+    activate Repository
+
+    Repository --> ListService: proposal
+    deactivate Repository
+
+    ListService --> Controller: proposal
+    deactivate ListService
+
+    Controller -> Domain: isAcceptedByCustomer()
+    activate Domain
+
+    Domain --> Controller: boolean
+    deactivate Domain
+
+    alt Proposal is not ready to send
+        Controller --> UI: IllegalArgumentException
+    end
+
+        Controller -> Event: create(proposalID, crmCollaborator, customer)
+
+        Controller -> Publisher: publish(event)
+        activate Publisher
+
+        Publisher -> Handler: onEvent(event)
+        activate Handler
+
+        Handler -> ListService: findShowProposalByID(event.proposalID)
+        activate ListService
+
+        ListService -> Repository: ofIdentity(proposalID)
+        activate Repository
+
+        Repository --> ListService: proposal
+        deactivate Repository
+
+        ListService --> Handler: proposal
+        deactivate ListService
+
+        Handler -> Domain: sent(event)
+        activate Domain
+
+        note right of Domain : Changes state to ACCEPTED\nAdds event to events collection
+
+        Domain --> Handler: void
+        deactivate Domain
+
+        Handler -> Repository: save(proposal)
+        activate Repository
+
+        Repository --> Handler: proposal
+        deactivate Repository
+
+        Handler --> Publisher: void
+        deactivate Handler
+
+        Publisher --> Controller: void
+        deactivate Publisher
+
+    Controller --> UI: void
+    deactivate Controller
+
+    UI --> Actor: Display success message or error
+deactivate UI
+
+@enduml

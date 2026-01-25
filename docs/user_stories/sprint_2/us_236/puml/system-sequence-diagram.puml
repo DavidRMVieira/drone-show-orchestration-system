@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Edit Show Request
+
+actor "User" as USER
+participant ":System" as System
+
+autonumber
+
+USER -> System : Request to Edit Show Request
+activate System
+
+System --> USER : Display list of Show Requests
+deactivate System
+
+USER -> System : Select ShowRequest ID
+activate System
+
+System --> USER : Display ShowRequest Details
+deactivate System
+
+loop For each attribute (Place, Date, Duration, State)
+    USER -> System : Provide new value or skip
+    activate System
+    System --> USER : Confirm update or skip
+    deactivate System
+end
+
+System --> USER : ShowRequest updated successfully or error message
+deactivate System
+
+@enduml

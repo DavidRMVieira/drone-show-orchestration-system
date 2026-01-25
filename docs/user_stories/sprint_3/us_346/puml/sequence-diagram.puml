@@ -1,0 +1,27 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "Drone Tech" as Actor
+participant ValidateDroneLanguageUI as UI <<presentation>>
+participant ValidateDroneLanguageController as Controller <<application>>
+
+Actor --> UI: Validation of a drone program
+activate UI
+
+UI --> Actor: Request Drone Language Version and file name
+Actor --> UI: Provide Drone Language Version and file name
+
+    UI -> Controller: generateFigureDocument(dslVersion, fileName)
+    activate Controller
+
+    Controller --> UI: documentContent
+    deactivate Controller
+
+UI --> Actor: Display drone document or error
+deactivate UI
+
+@enduml

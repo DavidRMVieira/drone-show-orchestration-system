@@ -1,0 +1,154 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class AddFigureProposalUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class AddFigureProposalController <<application>> {
+        +addFigureProposal(selectedProposalDTO, selectedFigureDTO, x, y, z) : void
+        +listShowProposals() : Iterable<ShowProposalDTO>
+        +listFigureModels() : Iterable<Figure>
+    }
+
+    class ListShowProposalService <<application>> {
+        +allShowProposals() : Iterable<ShowProposalDTO>
+        +findShowProposalByID(proposalID) : ShowProposal
+    }
+
+    class FigureDTOParser <<application>> {
+        +valueOf(FigureDTO) : Figure
+    }
+}
+
+package "Persistence" {
+    class ShowProposalRepository <<repository>> {
+        +save(proposal) : ShowProposal
+        +findAll() : Iterable<ShowProposal>
+        +ofIdentity(proposalID) : ShowProposal
+    }
+
+    class Catalogue <<repository>> {
+        +findAllPublic() : Iterable<Figure>
+        +ofIdentity(figureID) : Figure
+    }
+}
+
+package "DTO" {
+    class ShowProposalDTO <<dto>> {
+    }
+
+    class FigureDTO <<dto>> {
+    }
+}
+
+package "Domain" {
+
+package "<<aggregate>> ShowProposal" {
+    class ShowProposal <<entity>> <<root>> {
+        +addFigure(figureInShow) : void
+        +configureFigure(figuresInShow) : void
+    }
+
+    class ShowProposalID <<value object>> <<id>> {
+    }
+
+    class Location <<value object>> {
+    }
+
+    class Date <<value object>> {
+    }
+
+    class Duration <<value object>> {
+    }
+
+    class VideoFile <<value object>> {
+    }
+
+    class Language <<value object>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    enum ShowProposalState <<value object>> {
+    }
+
+    class DroneInShow <<value object>> {
+    }
+
+    class FigureInShow <<value object>> {
+        -coordinateX : double
+        -coordinateY : double
+        -coordinateZ : double
+    }
+
+    class DroneModelName <<value object>> {
+    }
+
+    ShowProposal --> "1" ShowProposalID
+    ShowProposal --> "1" Date
+    ShowProposal --> "1" Location
+    ShowProposal --> "1" Duration
+    ShowProposal --> "1" VideoFile
+    ShowProposal --> "1" Language
+    ShowProposal --> "1" Money
+    ShowProposal --> "1" ShowProposalState
+    ShowProposal --> "*" DroneInShow
+    ShowProposal --> "*" FigureInShow
+    DroneInShow --> "1" DroneModelName
+    }
+
+    package "<<aggregate>> Figure" {
+        class Figure <<entity>> <<root>> {
+            - <<VO>> Description
+        }
+
+        class FigureCode <<value object>> <<id>> {
+        }
+
+        enum FigureType <<value object>> {
+        }
+
+        class FigureVersion <<value object>> {
+        }
+
+        class DSL <<entity>> {
+            - <<VO>> Description
+        }
+
+        class DSLId <<value object>> {
+        }
+
+        class DSLVersion <<value object>> {
+        }
+
+        Figure --> "1" FigureCode
+        Figure --> "1" FigureType
+        Figure --> "1" FigureVersion
+        Figure --> "1" DSL
+        DSL --> "1" DSLId
+        DSL --> "1" DSLVersion
+    }
+
+FigureInShow "*" -- "1" Figure : reference
+}
+
+' Relationships
+AddFigureProposalUI --> AddFigureProposalController : uses
+
+AddFigureProposalController --> ListShowProposalService : proposalSvc
+AddFigureProposalController --> Catalogue : catalogue
+AddFigureProposalController --> ShowProposalRepository : proposalRepo
+AddFigureProposalController --> FigureDTOParser : parser
+AddFigureProposalController --> ShowProposal : proposal
+
+ListShowProposalService --> ShowProposalDTO : dto
+ListShowProposalService --> ShowProposalRepository : proposalRepo
+
+FigureDTOParser --> FigureDTO : dto
+
+@enduml

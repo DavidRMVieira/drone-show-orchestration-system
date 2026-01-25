@@ -1,0 +1,54 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+title Class Diagram - Validation of a drone program
+
+package "Presentation" {
+    class ValidateDroneLanguageUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class ValidateDroneLanguageController <<application>> {
+        +validateDroneLanguage(droneLanguage : String) : DroneLanguage
+    }
+
+    class DroneLanguageImporter <<application>> {
+        +importFrom(content) : DroneLanguage
+    }
+
+}
+
+package "Persistence" {
+    class DroneLanguagePluginRepository <<repository>> {
+        +save(figure : Figure) : Figure
+        +findByID(figureID : FigureID) : Figure
+    }
+}
+
+package "Domain" {
+
+
+package "<<aggregate>> DroneLanguagePlugin" {
+    class DroneLanguagePlugin <<entity>> {
+    }
+
+    class FQClassName <<value object>> {
+    }
+
+    class DroneLanguageVersion <<value object>> <<id>> {
+    }
+
+    DroneLanguagePlugin --> "1" FQClassName
+    DroneLanguagePlugin --> "1" DroneLanguageVersion
+    }
+
+}
+
+ValidateDroneLanguageUI --> ValidateDroneLanguageController : uses
+ValidateDroneLanguageController --> DroneLanguageImporter : parser
+ValidateDroneLanguageController --> DroneLanguagePluginRepository
+DroneLanguagePluginRepository --> DroneLanguagePlugin : plugin
+
+@enduml

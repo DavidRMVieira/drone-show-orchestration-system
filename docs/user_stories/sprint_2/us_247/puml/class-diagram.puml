@@ -1,0 +1,56 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class ListFigureCategoryUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class ListFigureCategoryController <<application>> {
+        +listFigureCategories() : Iterable<FigureCategoryDTO>
+    }
+
+    class ListFigureCategoryService <<application>> {
+        +allFigureCategories() : Iterable<FigureCategoryDTO>
+    }
+
+    class FigureCategoryDTOParser <<application>> {
+        +transformToDTO(categories) : Iterable<FigureCategoryDTO>
+    }
+}
+
+package "dto" {
+    class FigureCategoryDTO <<dto>> {
+    }
+}
+
+package "Domain" {
+    class FigureCategory <<entity>> <<root>> {
+    }
+    class Designation <<value object>> {
+    }
+    class Description <<value object>> {
+    }
+
+    FigureCategory --> Designation
+    FigureCategory --> Description
+}
+
+package "Persistence" {
+    class FigureCategoryRepository <<repository>> {
+        +findAll() : Iterable<FigureCategory>
+    }
+}
+
+ListFigureCategoryUI --> ListFigureCategoryController
+ListFigureCategoryService --> FigureCategoryRepository : repo
+ListFigureCategoryController --> ListFigureCategoryService : svc
+ListFigureCategoryController --> FigureCategoryDTO : categoriesDTO
+ListFigureCategoryService --> FigureCategory : categories
+
+ListFigureCategoryService --> FigureCategoryDTOParser : parser
+FigureCategoryDTOParser --> FigureCategoryDTO : categoriesDTO
+
+@enduml

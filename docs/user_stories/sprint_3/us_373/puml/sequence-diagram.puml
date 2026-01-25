@@ -1,0 +1,73 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "Representative" as Actor
+participant GetShowInfoUI as UI <<presentation>>
+participant GetShowInfoController as Controller <<application>>
+participant ListShowProposalService as proposalSvc <<application>>
+participant AuthorizationService as authSvc <<application>>
+participant ShowProposalDTOParser as proposalParser <<application>>
+participant Representative as repDomain <<domain>>
+database ShowProposalRepository as Repository <<repository>>
+database RepresentativeRepository as representativeRepository <<repository>>
+
+Actor --> UI: Get Show Info
+activate UI
+
+    UI -> Controller: listShowsByCustomer()
+    activate Controller
+
+    note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+    note right of Controller : Simplified persistence\n(see specific diagram)
+
+        Controller -> authSvc : authenticatedUser()
+        activate authSvc
+
+        authSvc --> Controller : currentUser
+        deactivate authSvc
+
+        Controller -> representativeRepository : findByUser(currentUser)
+        activate representativeRepository
+
+        representativeRepository --> Controller : currentRepresentative
+        deactivate representativeRepository
+
+        Controller -> repDomain : customer()
+        activate repDomain
+
+        repDomain --> Controller : customer
+        deactivate repDomain
+
+        Controller -> proposalSvc : allShowsByCustomer(customer)
+        activate proposalSvc
+
+                    proposalSvc -> Repository : findProposalsAcceptedStateByCustomer(customer)
+                    activate Repository
+
+                    Repository --> proposalSvc : proposals
+                    deactivate Repository
+
+                    proposalSvc -> proposalParser : transformToDTO(proposals)
+                    activate proposalParser
+
+                    proposalParser --> proposalSvc : proposalsDTO
+                    deactivate proposalParser
+
+        proposalSvc --> Controller : proposalsDTO
+        deactivate proposalSvc
+
+    Controller --> UI: proposalsDTO
+    deactivate Controller
+
+    UI --> Actor: Show list of shows
+    Actor --> UI: Select show
+
+UI --> Actor: Display show info
+deactivate UI
+
+@enduml

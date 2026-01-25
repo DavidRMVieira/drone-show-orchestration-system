@@ -1,0 +1,89 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "CRM Collaborator or Manager" as Actor
+participant ListShowRequestCustomerUI as UI <<presentation>>
+participant ListShowRequestCustomerController as Controller <<application>>
+participant ListCustomerService as CustSvc <<application>>
+participant CustomersDTOParser as custParser <<application>>
+participant ShowRequestDTOParser as Parser <<utility>>
+participant CustomerDTO as Dto <<dto>>
+database ShowRequestRepository as Repo <<repository>>
+database CustomerRepository as custRepository <<repository>>
+
+Actor --> UI: List Show Requests by Customer
+activate UI
+
+    UI -> Controller: listCustomer()
+    activate Controller
+
+    note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+    note right of Controller : Simplified persistence\n(see specific diagram)
+
+        Controller -> CustSvc: allCustomers()
+        activate CustSvc
+
+                    CustSvc -> custRepository : findAll()
+                    activate custRepository
+
+                    custRepository --> CustSvc : customers
+                    deactivate custRepository
+
+                    CustSvc -> custParser : transformToDTO(customers)
+                    activate custParser
+
+                    custParser --> CustSvc : customersDTO
+                    deactivate custParser
+
+        CustSvc --> Controller: customersDTO
+        deactivate CustSvc
+
+    Controller --> UI: customersDTO
+    deactivate Controller
+
+    UI --> Actor: Show customer list
+    Actor --> UI: Select customer
+
+    UI -> Controller: listShowRequestCustomer(selectedCustomerDTO)
+    activate Controller
+
+        Controller -> Dto: getVatNumber()
+        activate Dto
+
+        Dto --> Controller: customerVat
+        deactivate Dto
+
+        Controller -> CustSvc: findCustomerByVatNumber(customerVat)
+        activate CustSvc
+
+                CustSvc -> custRepository: ofIdentity(customerVat)
+                activate custRepository
+
+                custRepository --> CustSvc: customer
+                deactivate custRepository
+
+        CustSvc --> Controller: customer
+        deactivate CustSvc
+
+        Controller -> Repo: findAllByCustomer(customer)
+        activate Repo
+        Repo --> Controller: showRequests
+        deactivate Repo
+
+        Controller -> Parser: transformToDTO(showRequests)
+        activate Parser
+        Parser --> Controller: showRequestsDTO
+        deactivate Parser
+
+    Controller --> UI: showRequestsDTO
+    deactivate Controller
+
+    UI --> Actor: Display Show Requests Info or error
+
+deactivate UI
+@enduml

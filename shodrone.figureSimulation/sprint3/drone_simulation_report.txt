@@ -1,0 +1,59 @@
+=== DRONE SIMULATION REPORT ===
+Simulation started at: Sat Jun 14 16:14:20 2025
+
+Number of drones: 3
+
+COLLISION EVENT #1
+Time Step: 0, Position: (30,40,0)
+Timestamp: Sat Jun 14 16:14:19 2025
+Drones involved (3): 0, 1, 2
+
+COLLISION EVENT #2
+Time Step: 1, Position: (30,41,3)
+Timestamp: Sat Jun 14 16:14:20 2025
+Drones involved (3): 0, 1, 2
+
+COLLISION EVENT #3
+Time Step: 2, Position: (30,42,1)
+Timestamp: Sat Jun 14 16:14:20 2025
+Drones involved (3): 0, 1, 2
+
+COLLISION EVENT #4
+Time Step: 3, Position: (30,43,2)
+Timestamp: Sat Jun 14 16:14:20 2025
+Drones involved (3): 0, 1, 2
+
+COLLISION EVENT #5
+Time Step: 4, Position: (30,44,3)
+Timestamp: Sat Jun 14 16:14:20 2025
+Drones involved (3): 0, 1, 2
+
+
+=== DRONE EXECUTION HISTORY ===
+Drone 0:
+  Time 0: (30, 40, 0)
+  Time 1: (30, 41, 3)
+  Time 2: (30, 42, 1)
+  Time 3: (30, 43, 2)
+  Time 4: (30, 44, 3)
+
+Drone 1:
+  Time 0: (30, 40, 0)
+  Time 1: (30, 41, 3)
+  Time 2: (30, 42, 1)
+  Time 3: (30, 43, 2)
+  Time 4: (30, 44, 3)
+
+Drone 2:
+  Time 0: (30, 40, 0)
+  Time 1: (30, 41, 3)
+  Time 2: (30, 42, 1)
+  Time 3: (30, 43, 2)
+  Time 4: (30, 44, 3)
+
+FIGURE VALIDATION: FAILED (5 collision(s) detected)
+
+=== SIMULATION SUMMARY ===
+Total collisions detected: 5
+Simulation ended at: Sat Jun 14 16:14:20 2025
+

@@ -1,0 +1,33 @@
+Dear,
+[Customer Representative Name]
+[Company name]
+[Address with postal code and country]
+[VAT Number]
+
+Reference [proposal number] / [date]
+Show Proposal
+
+[Company Name] is a VIP client and Shodrone is pleased to submit for your consideration a proposal for the execution of an aerial show with drones, as described below.
+Shodrone is a company that prioritizes safety, which is why it uses the most advanced AI technology to support the development of its shows, with all shows being previously and carefully tested/simulated with AI-Test© technology before being presented to the client. In the link [link to show video] there is a video with a simulation of the proposed show.
+
+With the application of AI-Test©, a Shodrone exclusive, we are confident in offering liability insurance in the amount of [insurance amount] for the show. Detailed show data is presented in the attachment.
+
+Looking forward to hearing from you soon.
+
+Best regards,
+
+[CRM Manager Name]
+CRM Manager
+
+Attachment - Show Details [show proposal number]
+
+Location - [GPS coordinates of the location]
+Date - [date of the event]
+Time - [time of the event]
+Duration - [duration] minutes.
+
+#List of used drones
+[model] - [quantity] units.
+
+#List of figures
+[position in show] - [figure name]

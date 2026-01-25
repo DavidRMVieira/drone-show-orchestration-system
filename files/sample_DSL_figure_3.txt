@@ -1,0 +1,42 @@
+DSL version 1.1.23;
+
+DroneType droneTypeA;
+
+Position aPos = (0,0,0);
+Position yAxis = (0,1,0);
+
+Velocity aVelocity = 6;
+Velocity rotVelocity = PI/10;
+
+Distance aRadius = 19;
+
+Circle aCircle(aPos, aRadius, droneTypeA);
+Circumference aCircumference(aPos, aRadius+1, droneTypeA);
+
+before
+   aCircle.lightsOn(GREEN);
+   aCircumference.lightsOn(RED);
+   group
+		aCircle.move((0, 0, 1),50, aVelocity);
+		aCircumference.move((0, 0, 1),50, aVelocity);
+   endgroup
+endbefore
+
+group
+	aCircle.rotate(aPos, yAxis, -2*PI, rotVelocity);
+	aCircumference.rotate(aPos, yAxis, 2*PI, rotVelocity);
+endgroup
+
+pause(10);
+
+aCircle.lightsOn(RED);
+aCircumference.lightsOn(GREEN);
+
+after
+	group
+		aCircle.movePos(aPos, aVelocity);
+		aCircumference.movePos(aPos, aVelocity);
+	endgroup
+	aCircle.lightsOff;
+	aCircumference.lightsOff;
+endafter

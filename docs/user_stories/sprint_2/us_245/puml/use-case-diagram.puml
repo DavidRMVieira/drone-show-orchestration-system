@@ -1,0 +1,10 @@
+@startuml
+!define RECTANGLE class
+
+actor "Show Designer" as SD
+
+usecase "Add Figure Category" as UC
+
+SD --> UC
+
+@enduml

@@ -1,0 +1,44 @@
+"@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "CRM Manager" as Actor
+participant RegisterProposalTemplateUI as UI <<presentation>>
+participant RegisterProposalTemplateController as Controller <<application>>
+participant ProposalTemplate as Domain <<domain>>
+database ProposalTemplateRepository as Repository <<repository>>
+
+Actor --> UI: Register Proposal Template
+activate UI
+
+UI --> Actor: Request Template Version and Class Name
+Actor --> UI: Provide Template Version and Class Name
+
+    UI -> Controller: registerProposalTemplate(templateVersion, className)
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+        note right of Controller : Simplified persistence\n(see specific diagram)
+
+        Controller -> Domain: create(templateVersion, className)
+
+        Controller -> Repository: save(ProposalTemplate)
+        activate Repository
+
+        Repository --> Controller: ProposalTemplate
+        deactivate Repository
+
+        Controller --> UI: ProposalTemplate
+    deactivate Controller
+
+UI --> Actor: Display template info or error
+deactivate UI
+
+@enduml
+"
+
+este é o sequence diagram da US 318

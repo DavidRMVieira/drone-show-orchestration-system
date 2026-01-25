@@ -1,0 +1,108 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class DisableUserUI <<presentation>> {
+    }
+}
+
+package "Application" {
+    class DisableUserController <<application>> {
+        +activeUsers() : Iterable<ShodroneUserDTO>
+        +disableUser(shodroneUserDTO) : SystemUser
+    }
+
+    class UserManagementService <<application>> {
+        +deactivateUser(systemUser) : SystemUser
+    }
+
+    class AuthzRegistry <<utility>> {
+        +userService() : UserManagementService
+    }
+
+    class ShodroneUserDTOParser <<application>> {
+        +transformToDTO(activeUsers)
+        +valueOf(shodroneUserDTO)
+    }
+}
+
+package "DTO" {
+    class ShodroneUserDTO <<dto>> {
+    }
+}
+
+package "Domain" {
+
+    package "<<aggregate>> ShodroneUser" {
+        class ShodroneUser <<entity>> <<root>> {
+        }
+
+        class ShodroneEmail <<value object>> <<id>> {
+        }
+
+        class PhoneNumber <<value object>> {
+        }
+    }
+
+    package "<<aggregate>> SystemUser" {
+        class SystemUser <<entity>> <<root>> {
+            -active : boolean
+        }
+
+        class Username <<value object>> <<id>> {
+        }
+
+        class Password <<value object>> {
+        }
+
+        class Name <<value object>> {
+        }
+
+        class EmailAddress <<value object>> {
+        }
+
+        class RoleSet {
+        }
+
+        interface Set <<interface>> {
+        }
+
+        class RoleAssigment <<entity>> {
+        }
+
+        class Role <<value object>> {
+        }
+    }
+}
+
+package "Persistence" {
+    class ShodroneUserRepository <<repository>> {
+        +findAllActive() : Iterable<ShodroneUser>
+    }
+}
+
+DisableUserUI --> DisableUserController
+AuthzRegistry --> UserManagementService : userService
+DisableUserController ..> AuthzRegistry
+DisableUserController ..> UserManagementService : userSvc
+UserManagementService --> SystemUser : systemUser
+DisableUserController --> ShodroneUserRepository : repo
+DisableUserController --> ShodroneUserDTOParser : parser
+
+ShodroneUserDTOParser --> ShodroneUserDTO : dto
+
+ShodroneUser --> ShodroneEmail
+ShodroneUser --> PhoneNumber
+ShodroneUser --> SystemUser : has
+
+SystemUser --> Username
+SystemUser --> Password
+SystemUser --> Name
+SystemUser --> EmailAddress
+SystemUser --> RoleSet
+RoleSet ..|> Set
+Set ..> RoleAssigment
+RoleAssigment --> Role
+
+@enduml

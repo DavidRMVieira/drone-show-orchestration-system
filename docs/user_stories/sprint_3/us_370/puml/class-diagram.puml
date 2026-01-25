@@ -1,0 +1,274 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "Presentation" {
+    class AnalyzeProposalUI <<presentation>> {
+    }
+}
+
+package "Server" {
+
+    class AnalyzeProposalProxyController <<server>> {
+        +listCustomerShowProposals(username, password) : Iterable<ShowProposalDTO>
+    }
+
+    class CsvCASProtocolProxy <<server>> {
+        +listCustomerShowProposals(username, password) : Iterable<ShowProposalDTO>
+    }
+
+}
+
+package "Application" {
+    class ProposalsForACustomerController <<application>> {
+        +checkPendingProposal : Iterable<ShowProposalDTO>
+    }
+
+    class AuthorizationService <<application>> {
+        +authenticatedUser() : SystemUser
+    }
+
+    class ListShowProposalService <<application>> {
+        +allProposalsAwaitingResponseByRepresentativeOrCustomer(currentRepresentative)
+    }
+
+    class ShowProposalDTOParser <<application>> {
+        +transformToDTO(proposals) : Iterable<ShowProposalDTO>
+    }
+}
+
+package "Persistence" {
+    class ShowProposalRepository <<repository>> {
+        +findProposalsAwaitingResponseByRepresentativeOrCustomer(currentRepresentative) : Iterable<ShowProposal>
+    }
+
+    class RepresentativeRepository <<repository>> {
+        +findByUser(currentUser) : Representative
+    }
+}
+
+package "DTO" {
+    class ShowProposalDTO <<dto>> {
+    }
+}
+
+package "Domain" {
+
+package "<<aggregate>> Representative" {
+    class Representative <<entity>> {
+    }
+
+    class Position <<value object>> {
+    }
+
+    class EmailAddress <<value object>> <<id>> {
+    }
+
+    Representative --> "1" Position
+    Representative --> "1" EmailAddress
+}
+
+package "<<aggregate>> Customer" {
+    class Customer <<entity>> <<root>> {
+    }
+
+    enum CustomerState <<value object>> {
+    }
+
+    enum CustomerType <<value object>> {
+    }
+
+    class Name <<value object>> {
+    }
+
+    class VAT <<value object>> <<id>> {
+    }
+
+    class Address <<value object>> {
+    }
+
+    Customer --> "1" VAT
+    Customer --> "1" Address
+    Customer --> "1" CustomerState
+    Customer --> "1" CustomerType
+    Customer --> "1" Name
+}
+
+package "<<aggregate>> ShowRequest" {
+    class ShowRequest <<entity>> <<root>> {
+    }
+
+    class ShowRequestID <<value object>> <<id>> {
+    }
+
+    class Place <<value object>> {
+    }
+
+    class Date <<value object>> {
+    }
+
+    class Duration <<value object>> {
+    }
+
+    enum ShowRequestState <<value object>> {
+    }
+
+    ShowRequest --> "1" ShowRequestID
+    ShowRequest --> "1" Date
+    ShowRequest --> "1" Place
+    ShowRequest --> "1" Duration
+    ShowRequest --> "1" ShowRequestState
+}
+
+package "<<aggregate>> ShowProposal" {
+    class ShowProposal <<entity>> <<root>> {
+        - numberDrones : int
+    }
+
+    class ShowProposalID <<value object>> <<id>> {
+    }
+
+    class Location <<value object>> {
+    }
+
+    class Date <<value object>> {
+    }
+
+    class Duration <<value object>> {
+    }
+
+    class VideoFile <<value object>> {
+    }
+
+    class Language <<value object>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    enum ShowProposalState <<value object>> {
+    }
+
+    class DroneInShow <<value object>> {
+        -quantity : int
+    }
+
+    class FigureInShow <<value object>> {
+        -coordinateX : double
+        -coordinateY : double
+        -coordinateZ : double
+    }
+
+    class SimulationLog <<entity>> {
+    }
+
+    enum SimulationResult <<value object>> {
+    }
+
+    ShowProposal --> "1" ShowProposalID
+    ShowProposal --> "1" Date
+    ShowProposal --> "1" Location
+    ShowProposal --> "1" Duration
+    ShowProposal --> "1" VideoFile
+    ShowProposal --> "1" Money
+    ShowProposal --> "1" Language
+    ShowProposal --> "1" ShowProposalState
+    ShowProposal --> "*" DroneInShow
+    ShowProposal --> "*" FigureInShow
+    ShowProposal --> "*" SimulationLog
+    SimulationLog --> "1" Date
+    SimulationLog --> "1" SimulationResult
+}
+
+package "<<aggregate>> DroneModel" {
+    class DroneModel <<entity>> <<root>> {
+    }
+
+    class DroneModelName <<value object>> <<id>> {
+    }
+
+    class Manufacturer <<value object>> {
+    }
+
+    DroneModel --> "1" Manufacturer
+    DroneModel --> "1" DroneModelName
+}
+
+package "<<aggregate>> Figure" {
+    class Figure <<entity>> <<root>> {
+        - <<VO>> Description
+    }
+
+    class FigureCode <<value object>> <<id>> {
+    }
+
+    enum FigureType <<value object>> {
+    }
+
+    class FigureVersion <<value object>> {
+    }
+
+    class DSL <<entity>> {
+        - <<VO>> Description
+    }
+
+    class DSLId <<value object>> {
+    }
+
+    class DSLVersion <<value object>> {
+    }
+
+    Figure --> "1" FigureCode
+    Figure --> "1" FigureType
+    Figure --> "1" FigureVersion
+    Figure --> "1" DSL
+    DSL --> "1" DSLId
+    DSL --> "1" DSLVersion
+}
+
+package "<<aggregate>> ShodroneUser" {
+    class ShodroneUser <<entity>> <<root>> {
+    }
+
+    class Role <<value object>> {
+    }
+
+    class PhoneNumber <<value object>> {
+    }
+
+    class ShodroneEmail <<value object>> <<id>> {
+    }
+
+    ShodroneUser --> "1..*" Role
+    ShodroneUser --> "1" ShodroneEmail
+    ShodroneUser --> "1" PhoneNumber
+}
+
+Representative --> "1" ShodroneUser : is a
+Customer "1" <-- "*" Representative : represents
+ShowRequest "*" --> "1" Customer : requested by
+ShowProposal "*" --> "1" ShowRequest : proposes
+ShowProposal "*" --> "0..1" Representative : exclusive to
+DroneInShow "*" -- "1" DroneModel : reference
+FigureInShow "*" -- "1" Figure : reference
+
+}
+
+' Relationships
+AnalyzeProposalUI --> AnalyzeProposalProxyController : uses
+AnalyzeProposalProxyController --> CsvCASProtocolProxy : forwardRequest
+CsvCASProtocolProxy --> ProposalsForACustomerController : delegate
+
+ProposalsForACustomerController --> ListShowProposalService : proposalSvc
+ProposalsForACustomerController --> AuthorizationService : auth
+ProposalsForACustomerController --> RepresentativeRepository : representativeRepo
+ListShowProposalService --> ShowProposalDTOParser : parser
+
+ShowProposalDTOParser --> ShowProposalDTO : proposalDto
+ListShowProposalService --> ShowProposalRepository : proposalRepo
+
+AuthorizationService --> ShodroneUser : currentUser
+RepresentativeRepository --> Representative : currentRepresentative
+ShowProposalRepository --> ShowProposal : proposal
+
+@enduml

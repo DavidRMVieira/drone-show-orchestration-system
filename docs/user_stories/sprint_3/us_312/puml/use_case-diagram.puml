@@ -1,0 +1,8 @@
+@startuml
+!define RECTANGLE class
+
+actor "CRM Collaborator" as USER
+usecase "Add Figure to a Proposal" as UC
+
+USER --> UC
+@enduml
