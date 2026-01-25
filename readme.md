@@ -28,9 +28,12 @@ Team Members:
 
 ## 3. How to Build
 
+
 Make sure Maven is installed and on the PATH.
 
-The java source is Java 17 so any JDK 17 or later will work.
+**Important:** You must use JDK 17 to build and run this project. Other versions (e.g., JDK 21 or 25) may cause build or runtime errors due to incompatibilities with some dependencies (such as Lombok).
+
+You can use the provided script [`use-jdk17.ps1`](use-jdk17.ps1) (Windows) as an example to quickly set JAVA_HOME and PATH for JDK 17. If your JDK 17 is installed in a different location, edit the script accordingly.
 
 run script:
 
