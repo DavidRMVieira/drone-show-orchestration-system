@@ -22,6 +22,9 @@ target
 /*.iml
 *.iml
 
+# Ignore VS Code files
+.vscode/
+
 # Ignore Maven files that should not be versioned
 .mvn/
 pom.xml.tag

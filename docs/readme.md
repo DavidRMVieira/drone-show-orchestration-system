@@ -28,10 +28,10 @@ This system aims to prepare Shodrone for large, highly customized drone shows, p
 
 | Number  | Name           |
 |---------|----------------|
-| 1231046 | Daniel Silva   |
 | 1230487 | David Vieira   |
-| 1230543 | Igor Coutinho  |
+| 1231046 | Daniel Silva   |
 | 1230544 | Rafael Barbosa |
+| 1230543 | Igor Coutinho  |
 | 1211252 | Rui Vieira     |
 
 ### 1.4 User stories

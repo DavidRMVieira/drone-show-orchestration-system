@@ -12,6 +12,7 @@ Team Members:
  - Daniel Silva
  - Rafael Barbosa
  - Igor Coutinho
+ - Rui Vieira
 ```
 <br>
 
