@@ -2,7 +2,14 @@
 
 ---
 
-> This repository was created as part of the **Integrative Project** in the 3rd semester of the Bachelor’s Degree in Informatics Engineering at **ISEP**, and was therefore developed as a group project.
+<br>
+
+```
+⚠️ This repository was created as part of the Integrative Project in the 3rd semester of the Bachelor’s Degree in Informatics Engineering at ISEP, and was therefore developed as a group project.
+```
+
+<br>
+
 
 ---
 
@@ -15,17 +22,17 @@
 
 ---
 
-## 1. 📝 Project Description
+## 1. 📝 System Overview
 
-> *The "Distributed Drone Show Orchestration & Simulation System" is a distributed platform for managing, orchestrating, and simulating multimedia drone shows. It integrates a Java-based backoffice for customer and show management with a high-performance C simulation engine for real-time, scalable collision detection and drone fleet coordination. The system is designed for extensibility, safety, and large-scale entertainment scenarios, supporting robust navigation, communication, and monitoring of drone fleets. Its flexible architecture also enables adaptation to other domains such as logistics, surveillance, and delivery. Persistence options (JPA/Hibernate or In-Memory) and modular configuration allow easy deployment and testing across different environments.*
+- *The "Distributed Drone Show Orchestration & Simulation System" is a distributed platform for managing, orchestrating, and simulating multimedia drone shows. It integrates a Java-based backoffice for customer and show management with a high-performance C simulation engine for real-time, scalable collision detection and drone fleet coordination. The system is designed for extensibility, safety, and large-scale entertainment scenarios, supporting robust navigation, communication, and monitoring of drone fleets. Its flexible architecture also enables adaptation to other domains such as logistics, surveillance, and delivery. Persistence options (JPA/Hibernate or In-Memory) and modular configuration allow easy deployment and testing across different environments.*
 
-> *The system can be run using servers created locally or deployed on the DEI (Departamento de Engenharia Informática, ISEP) infrastructure. The DEI servers provide virtualized computing, storage, and networking resources (VS-Cloud), accessible via VPN and supporting remote management, SSH/SMB/CIFS storage, and web hosting. This flexibility allows the platform to be used for both local development and production-like deployments on institutional infrastructure.*
+- *The system can be run using servers created locally or deployed on the DEI (Departamento de Engenharia Informática, ISEP) infrastructure. The DEI servers provide virtualized computing, storage, and networking resources (VS-Cloud), accessible via VPN and supporting remote management, SSH/SMB/CIFS storage, and web hosting. This flexibility allows the platform to be used for both local development and production-like deployments on institutional infrastructure.*
 
 
 ## 2. 📚 Planning and Technical Documentation
 
 📄 **Detailed documentation:**  
-[Planning and Technical Documentation](docs/readme.md)
+- [Planning and Technical Documentation](docs/readme.md)
 
 ---
 
@@ -39,7 +46,7 @@
 
 **Quick Setup (Windows):**  
 You can use the provided script [`use-jdk17.ps1`](use-jdk17.ps1) as an example to quickly set `JAVA_HOME` and `PATH` for JDK 17.  
-_If your JDK 17 is installed in a different location, edit the script accordingly._
+If your JDK 17 is installed in a different location, edit the script accordingly.
 
 
 ### Run Build Script
