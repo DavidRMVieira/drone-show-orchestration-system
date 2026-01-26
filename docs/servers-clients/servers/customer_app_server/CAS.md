@@ -11,25 +11,32 @@ The CAS protocol is based on the exchange of text messages, where each message r
 - Generic example: `COMMAND,param1,param2,...`
 
 ### Main Supported Commands
-Below are some examples of commands supported by CAS:
 
-- **LIST_SHOWS**: Lists all scheduled shows for the client.
-  - Example: `LIST_SHOWS,client_id`
-- **SHOW_INFO**: Retrieves detailed information about a show.
-  - Example: `SHOW_INFO,show_id`
-- **LIST_PROPOSALS**: Lists proposals submitted by the client.
-  - Example: `LIST_PROPOSALS,client_id`
+Below are the main commands currently supported by CAS:
+
+- **GET_REPRESENTATIVE_SHOW_PROPOSALS_AWAITING_RESPONSE**: Lists all proposals for a representative that are awaiting a response.
+  - Example: `GET_REPRESENTATIVE_SHOW_PROPOSALS_AWAITING_RESPONSE,"user_email","password"`
 - **ACCEPT_PROPOSAL**: Accepts a show proposal.
-  - Example: `ACCEPT_PROPOSAL,proposal_id`
+  - Example: `ACCEPT_PROPOSAL,"user_email","password",proposal_id`
 - **REJECT_PROPOSAL**: Rejects a show proposal.
-  - Example: `REJECT_PROPOSAL,proposal_id`
+  - Example: `REJECT_PROPOSAL,"user_email","password",proposal_id,"feedback"`
+- **GET_CUSTOMER_SCHEDULED_SHOW_PROPOSALS**: Lists all scheduled shows for the customer.
+  - Example: `GET_CUSTOMER_SCHEDULED_SHOW_PROPOSALS,"user_email","password"`
+- **GET_CUSTOMER_SHOW_PROPOSALS**: Lists all proposals submitted by the customer.
+  - Example: `GET_CUSTOMER_SHOW_PROPOSALS,"user_email","password"`
 
 The protocol can be easily extended to support new commands by implementing new request classes.
 
 ### Server Responses
-Responses also follow the CSV format and may contain requested data (lists, details) or error/success messages.
-- Example of a success response: `SUCCESS,Operation completed successfully.`
-- Example of an error response: `ERROR,Detailed error message.`
+Responses also follow the CSV format and may contain requested data (lists, details) or error messages.
+- Example of a success response (listing proposals):
+  `"ID",...,"STATE",...  (header)
+  123,...,"PENDING",...  (by data row)`
+- Example of a success response (confirmation):
+  `Proposal accepted successfully.`
+- Example of an error response:
+  `ERROR_IN_REQUEST,original_request_line,Description of the error
+  UNKNOWN_REQUEST,original_request_line`
 
 ## Internal Operation
 1. CAS receives a message from the client.

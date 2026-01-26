@@ -74,3 +74,19 @@ The application follows a typical layered approach
 
 ![Domain Model](domain_model/domain-model.svg)
 
+
+
+
+### 2.5 Distributed System Architecture & Protocols
+
+![System Servers-Clients Architecture Diagram](servers-clients/system_architecture_servers-clients.svg)
+
+#### 2.5.1. Servers and Clients Overview
+For a detailed description of the networked components, their roles, and communication flows, see:
+**[Servers and Clients Architecture](servers-clients/system_architecture_servers-clients.md)**
+
+#### 2.5.2. Communication Protocols
+- Customer App Server (CAS) protocol: [servers/customer_app_server/CAS.md](servers/customer_app_server/CAS.md)
+- Simulator Server protocol: [servers/simulator_server/Simulator.md](servers/simulator_server/Simulator.md)
+
+---

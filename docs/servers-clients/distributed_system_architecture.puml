@@ -1,0 +1,72 @@
+@startuml
+
+skinparam componentStyle uml2
+skinparam packageStyle rectangle
+
+' Ajuste de layout para ficar vertical
+top to bottom direction
+
+title Distributed Drone Show Orchestration & Simulation System
+
+component "Customer App" as CustomerApp
+
+package "Backoffice" {
+    component "Customer App Server" as CAServer
+    component "Backoffice Application" as BackofficeApp
+    component "Database" as Database
+
+    component "DSL Plugin" as DSLPlugin
+    component "Drone Language Plugin" as DLPlugin
+    component "Show Proposal Plugin" as SPPlugin
+
+    ' Interfaces (Sockets/Lollipops)
+    interface "CAS_Socket" as I_CAS
+    interface "SQL" as I_SQL
+    interface "DSLPI" as I_DSLPI
+    interface "DLPI" as I_DLPI
+    interface "SPPI" as I_SPPI
+}
+
+component "Testing App" as TestingApp
+
+package "Show Simulator" {
+    component "Simulator" as Simulator
+    component "Drone Runner" as DroneRunner
+
+    interface "S_Socket" as I_SSocket
+    interface "R_Socket" as I_RSocket
+}
+
+' Relacionamentos e Provedores (quem fornece a interface)
+' O traço simples (-) conecta a interface ao componente que a implementa
+I_CAS -right- CAServer
+I_SQL -left- Database
+DSLPlugin -up- I_DSLPI
+DLPlugin -up- I_DLPI
+SPPlugin -up- I_SPPI
+
+I_SSocket -right- Simulator
+I_RSocket -up- Simulator
+
+' Dependências (quem usa a interface)
+' A seta (-->) conecta quem usa à interface
+CustomerApp --> I_CAS
+CAServer --> I_SQL
+BackofficeApp --> I_SQL
+
+' Dependências dos Plugins
+BackofficeApp --> I_DSLPI
+BackofficeApp --> I_DLPI
+BackofficeApp --> I_SPPI
+
+' Dependências do Simulator
+TestingApp -down-> I_SSocket
+DroneRunner -left-> I_RSocket
+
+' Dicas de layout invisíveis para forçar o posicionamento similar à imagem
+CustomerApp -[hidden]down-> CAServer
+CAServer -[hidden]down-> BackofficeApp
+BackofficeApp -[hidden]down-> DSLPlugin
+TestingApp -[hidden]down-> Simulator
+
+@enduml
