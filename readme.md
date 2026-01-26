@@ -1,98 +1,133 @@
-# Distributed Drone Show Orchestration & Simulation System
+# 📡 Distributed Drone Show Orchestration & Simulation System
 
 ---
 
-<br>
-
-```
-⚠️ This repository was created as part of the Integrative Project in the 3rd semester of the Bachelor’s Degree in Informatics Engineering at ISEP, and was therefore developed as a group project.
-
-Team Members:
- - David Vieira
- - Daniel Silva
- - Rafael Barbosa
- - Igor Coutinho
- - Rui Vieira
-```
-<br>
+> This repository was created as part of the **Integrative Project** in the 3rd semester of the Bachelor’s Degree in Informatics Engineering at **ISEP**, and was therefore developed as a group project.
 
 ---
 
-## 1. Description of the Project
- 
-*The "Distributed Drone Show Orchestration & Simulation System" is focused on creating a drone management and control system that integrates various aspects such as navigation, communication, and safety. The goal is to develop a robust platform that allows efficient management and monitoring of drone fleets, ensuring smooth operations and scalability. The project aims to build both a hardware-software solution that can be used in diverse environments like logistics, surveillance, and delivery systems.*
+## 👥 Team Members
+- David Vieira
+- Daniel Silva
+- Rafael Barbosa
+- Igor Coutinho
+- Rui Vieira
 
-## 2. Planning and Technical Documentation
+---
 
+## 1. 📝 Project Description
+
+> *The "Distributed Drone Show Orchestration & Simulation System" is focused on creating a drone management and control system that integrates various aspects such as navigation, communication, and safety. The goal is to develop a robust platform that allows efficient management and monitoring of drone fleets, ensuring smooth operations and scalability. The project aims to build both a hardware-software solution that can be used in diverse environments like logistics, surveillance, and delivery systems.*
+
+---
+
+## 2. 📚 Planning and Technical Documentation
+
+📄 **Detailed documentation:**  
 [Planning and Technical Documentation](docs/readme.md)
 
-## 3. How to Build
+---
+
+## 3. 🛠️ How to Build
+
+### Prerequisites
+- Make sure **Maven** is installed and on the `PATH`.
+
+> ⚠️ **Important:**  
+> You **must use JDK 17** to build and run this project. Other versions (e.g., JDK 21 or 25) may cause build or runtime errors due to incompatibilities with some dependencies (such as Lombok).
+
+**Quick Setup (Windows):**  
+You can use the provided script [`use-jdk17.ps1`](use-jdk17.ps1) as an example to quickly set `JAVA_HOME` and `PATH` for JDK 17.  
+_If your JDK 17 is installed in a different location, edit the script accordingly._
 
 
-Make sure Maven is installed and on the PATH.
+### Run Build Script
 
-**Important:** You must use JDK 17 to build and run this project. Other versions (e.g., JDK 21 or 25) may cause build or runtime errors due to incompatibilities with some dependencies (such as Lombok).
+- **Windows:**
+  ```powershell
+  .\build-all.bat
+  ```
+  Or, for a faster build (skips javadoc and copies dependencies):
+  ```powershell
+  .\quickbuild.bat
+  ```
+- **Linux/MacOS:**
+  ```sh
+  ./build-all.sh
+  ```
 
-You can use the provided script [`use-jdk17.ps1`](use-jdk17.ps1) (Windows) as an example to quickly set JAVA_HOME and PATH for JDK 17. If your JDK 17 is installed in a different location, edit the script accordingly.
+---
 
-run script:
+## 4. 🧪 How to Execute Tests
 
-- Windows:
+Make sure a JRE is installed and on the `PATH`.
 
-        .\build-all.bat
-- Linux/MacOs:
+- **Windows:**
+  ```powershell
+  .\run-tests.bat
+  ```
+- **Linux/MacOS:**
+  ```sh
+  ./run-tests.sh
+  ```
 
-        ./build-all.sh
+---
 
-## 4. How to Execute Tests
+## 5. 🚀 How to Run
 
-make sure a JRE is installed and on the PATH
+Make sure a JRE is installed and on the `PATH`.
 
-run script:
+### Backoffice Application
 
-- Windows:
-
-        .\run-tests.bat
-- Linux/MacOs:
-
-        ./run-tests.sh
-
-## 5. How to Run
-
-make sure a JRE is installed and on the PATH
-
-run script:
-
-- Windows:
-
-        .\run-backoffice.bat
-    or
-
-        .\run-customer-app.bat
-
-    you might want to initialize the database first by bootstraping some demo data
-
-        .\run-bootstrap.bat
-
-- Linux/MacOs:
-
-        ./run-backoffice.sh
-    or
-        
-        ./run-customer-app.sh
-
-  you might want to initialize the database first by bootstraping some demo data
-
-        ./run-bootstrap.sh
-
-## 6. How to Install/Deploy into Another Machine (or Virtual Machine)
-
-*To Do*
-
-## 7. How to Generate PlantUML Diagrams
-
-To generate plantuml diagrams for documentation execute the script (linux/unix/macos):
-
-    ./generate-plantuml-diagrams.sh
+- **Windows:**
+  ```powershell
+  .\run-backoffice.bat
+  ```
+- **Linux/MacOS:**
+  ```sh
+  ./run-backoffice.sh
+  ```
 
 
+### Server Clients Applications
+
+#### — Customer Application
+
+- **Windows:**
+  ```powershell
+  .\run-customer-app.bat
+  ```
+- **Linux/MacOS:**
+  ```sh
+  ./run-customer-app.sh
+  ```
+
+- Make sure the Customer App Server is running before starting the Customer Application.
+
+#### — Drone Runner
+
+- **Windows:**
+  ```powershell
+  .\run-drone-runner.bat
+  ```
+- **Linux/MacOS:**
+  ```sh
+  ./run-drone-runner.sh
+  ```
+
+- Make sure the Simulator Server is running before starting the Drone Runner.
+
+#### — Testing Application
+
+- **Windows:**
+  ```powershell
+  .\run-testing-app.bat
+  ```
+- **Linux/MacOS:**
+  ```sh
+  ./run-testing-app.sh
+  ```
+
+- Make sure the Simulator Server and Drone Runner are running before starting the Testing Application.
+
+---
