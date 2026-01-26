@@ -131,3 +131,17 @@ Make sure a JRE is installed and on the `PATH`.
 - Make sure the Simulator Server and Drone Runner are running before starting the Testing Application.
 
 ---
+
+## 6. 🌐 Server Applications
+
+The Server Applications are each deployed on a separate DEI server.
+
+- **Customer App Server**
+  - Default port: **8080**
+  - Server IP: `vs791.dei.isep.ipp.pt`
+
+- **Simulator Server**
+  - Default port: **10005**
+  - Server IP: `vs903.dei.isep.ipp.pt`
+
+---
