@@ -17,9 +17,10 @@
 
 ## 1. 📝 Project Description
 
-> *The "Distributed Drone Show Orchestration & Simulation System" is focused on creating a drone management and control system that integrates various aspects such as navigation, communication, and safety. The goal is to develop a robust platform that allows efficient management and monitoring of drone fleets, ensuring smooth operations and scalability. The project aims to build both a hardware-software solution that can be used in diverse environments like logistics, surveillance, and delivery systems.*
+> *The "Distributed Drone Show Orchestration & Simulation System" is a distributed platform for managing, orchestrating, and simulating multimedia drone shows. It integrates a Java-based backoffice for customer and show management with a high-performance C simulation engine for real-time, scalable collision detection and drone fleet coordination. The system is designed for extensibility, safety, and large-scale entertainment scenarios, supporting robust navigation, communication, and monitoring of drone fleets. Its flexible architecture also enables adaptation to other domains such as logistics, surveillance, and delivery. Persistence options (JPA/Hibernate or In-Memory) and modular configuration allow easy deployment and testing across different environments.*
 
----
+> *The system can be run using servers created locally or deployed on the DEI (Departamento de Engenharia Informática, ISEP) infrastructure. The DEI servers provide virtualized computing, storage, and networking resources (VS-Cloud), accessible via VPN and supporting remote management, SSH/SMB/CIFS storage, and web hosting. This flexibility allows the platform to be used for both local development and production-like deployments on institutional infrastructure.*
+
 
 ## 2. 📚 Planning and Technical Documentation
 
@@ -155,7 +156,6 @@ persistence.repositoryFactory=lapr4.JpaRepositoryFactory
 
 ## 7. 🚀 How to Run
 
-Make sure a JRE is installed and on the `PATH`.
 
 ### Backoffice Application
 
@@ -182,7 +182,7 @@ Make sure a JRE is installed and on the `PATH`.
   ./run-customer-app.sh
   ```
 
-- Make sure the Customer App Server is running before starting the Customer Application.
+> ⚠️ Make sure the Customer App Server is running before starting the Customer Application.
 
 #### — Drone Runner
 
@@ -195,7 +195,7 @@ Make sure a JRE is installed and on the `PATH`.
   ./run-drone-runner.sh
   ```
 
-- Make sure the Simulator Server is running before starting the Drone Runner.
+> ⚠️ Make sure the Simulator Server is running before starting the Drone Runner.
 
 #### — Testing Application
 
@@ -208,6 +208,6 @@ Make sure a JRE is installed and on the `PATH`.
   ./run-testing-app.sh
   ```
 
-- Make sure the Simulator Server and Drone Runner are running before starting the Testing Application.
+> ⚠️ Make sure the Simulator Server and Drone Runner are running before starting the Testing Application.
 
 ---
