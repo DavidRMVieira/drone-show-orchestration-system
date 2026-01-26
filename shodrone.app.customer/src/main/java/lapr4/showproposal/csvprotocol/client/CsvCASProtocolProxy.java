@@ -12,6 +12,10 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.nio.file.Paths;
 
 /**
  * Proxy that handles communication with the CSV - Customer App protocol server.
@@ -20,8 +24,24 @@ import java.util.List;
 public class CsvCASProtocolProxy {
 	private static final Logger LOGGER = LogManager.getLogger(CsvCASProtocolProxy.class);
 
-	private static final String SERVERIP = "vs791.dei.isep.ipp.pt";
+	private static final String DEFAULT_SERVERIP = "vs791.dei.isep.ipp.pt";
+	private static final int DEFAULT_PORT = 8080;
+	private static String serverIp = null;
+	private static int serverPort = -1;
 	private static boolean ServerIPConnectIsShow = false;
+
+	static {
+		Properties prop = new Properties();
+		String configPath = Paths.get(System.getProperty("user.dir"), "application.properties").toString();
+		try (InputStream input = new FileInputStream(configPath)) {
+			prop.load(input);
+			serverIp = prop.getProperty("server.customerapp.host", DEFAULT_SERVERIP);
+			serverPort = Integer.parseInt(prop.getProperty("server.customerapp.port", String.valueOf(DEFAULT_PORT)));
+		} catch (Exception e) {
+			serverIp = DEFAULT_SERVERIP;
+			serverPort = DEFAULT_PORT;
+		}
+	}
 
 	/**
 	 * Client socket for the CSV protocol.
@@ -240,11 +260,11 @@ public class CsvCASProtocolProxy {
 
 
 	private int getPort() {
-		return 8080;
+		return serverPort;
 	}
 
 	private String getAddress() {
-		return SERVERIP;
+		return serverIp;
 	}
 
 }

@@ -73,7 +73,87 @@ Make sure a JRE is installed and on the `PATH`.
 
 ---
 
-## 5. 🚀 How to Run
+
+## 5. 🌐 Server Applications
+
+The Server Applications can be run either locally (localhost) or on DEI servers.
+
+### How to configure the environment
+
+- The host and port for the servers are read from configuration files in each client app:
+  - Customer App: [(click here)](shodrone.app.customer/src/main/resources/customerapp.properties)
+  - Testing App: [(click here)](shodrone.app.testing/src/main/resources/testingapp.properties)
+
+- Local environment (default):
+  ```properties
+  server.host=localhost
+  server.port=8080  # or 10005 for the Simulator
+  ```
+
+- DEI environment (uncomment the lines in the respective file):
+  ```properties
+  server.host=vs791.dei.isep.ipp.pt  # Customer App Server
+  server.port=8080
+  ```
+  ```properties
+  server.host=vs903.dei.isep.ipp.pt  # Simulator Server
+  server.port=10005
+  ```
+
+### How to run the locally servers (default):
+
+**Customer App Server**
+  - Windows:
+    ```bat
+    .\run-customerapp-server.bat
+    ```
+  - Linux/MacOS:
+    ```sh
+    ./run-customerapp-server.sh
+    ```
+
+**Simulator Server**
+  - Windows:
+    ```bat
+    .\run-simulator-server.bat
+    ```
+  - Linux/MacOS:
+    ```sh
+    ./run-simulator-server.sh
+    ```
+
+> ⚠️ To change the environment, simply edit the module's configuration file. Recompiling the code is not necessary.
+
+---
+
+## 6. 🗄️ Persistence Options: JPA/Hibernate vs In-Memory
+
+You can choose between two persistence strategies for running the applications:
+
+- **JPA/Hibernate (default):** Uses a database for persistent storage (recommended for production or realistic testing).
+- **In-Memory:** Stores all data in memory (no database required, resets on restart; useful for demos or quick tests).
+
+### How to select the persistence mode
+
+Each application has a configuration file (e.g.,
+[`shodrone.app.testing/src/main/resources/application.properties`](shodrone.app.testing/src/main/resources/application.properties))
+with a property to select the persistence mode:
+
+```properties
+# For JPA/Hibernate (default):
+persistence.repositoryFactory=lapr4.JpaRepositoryFactory
+
+# For In-Memory:
+#persistence.repositoryFactory=lapr4.InMemoryRepositoryFactory
+```
+
+**To switch modes:**
+- Uncomment the desired line and comment out the other.
+- No need to recompile the project after changing this setting.
+
+---
+
+## 7. 🚀 How to Run
 
 Make sure a JRE is installed and on the `PATH`.
 
@@ -129,19 +209,5 @@ Make sure a JRE is installed and on the `PATH`.
   ```
 
 - Make sure the Simulator Server and Drone Runner are running before starting the Testing Application.
-
----
-
-## 6. 🌐 Server Applications
-
-The Server Applications are each deployed on a separate DEI server.
-
-- **Customer App Server**
-  - Default port: **8080**
-  - Server IP: `vs791.dei.isep.ipp.pt`
-
-- **Simulator Server**
-  - Default port: **10005**
-  - Server IP: `vs903.dei.isep.ipp.pt`
 
 ---
