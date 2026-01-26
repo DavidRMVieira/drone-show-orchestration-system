@@ -50,7 +50,6 @@ public final class ShodroneCustomerApp extends ShodroneBaseApplication {
 
 		System.out.println("\n\nConnecting to the Customer App Server...");
 		smokeTestCustomerAppServer();
-		System.out.println("\nConnection established!");
 
 		final var authenticated = new LoginUI(CredentialStore.STORE_CREDENTIALS, REPRESENTATIVE).show();
 		if (authenticated) {
@@ -74,6 +73,8 @@ public final class ShodroneCustomerApp extends ShodroneBaseApplication {
 			analyzeController.listRepresentativeShowProposalsAwaitingResponse(CredentialStore.getUsername(),
 					CredentialStore.getPassword());
 
+			System.out.println("\nConnection established!");
+
 //			// simulate another login - customer representative with a show proposal that is scheduled
 //			CredentialStore.STORE_CREDENTIALS.authenticated("jane.shodrone@showdrone.com", "Password1", REPRESENTATIVE);
 //
@@ -85,8 +86,10 @@ public final class ShodroneCustomerApp extends ShodroneBaseApplication {
 		} catch (final IOException e) {
 			System.out.println("Problems with network connection: " + e.getMessage());
 			LOGGER.debug(e);
+			System.exit(0);
 		} catch (final FailedRequestException e) {
-			System.out.println("Problems with request: " + e.getMessage());
+			System.out.println("\nConnection established!");
+			System.out.println("Problems with requests: " + e.getMessage());
 		}
 	}
 

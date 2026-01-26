@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.io.InputStream;
-import java.io.FileInputStream;
-import java.nio.file.Paths;
 
 /**
  * Proxy that handles communication with the CSV - Simulator protocol.
@@ -26,17 +24,21 @@ public class CsvSimulatorProtocolProxy {
 
 	private static final String DEFAULT_SERVERIP = "vs903.dei.isep.ipp.pt";
 	private static final int DEFAULT_PORT = 10005;
-	private static String serverIp = null;
-	private static int serverPort = -1;
+	private static String serverIp;
+	private static int serverPort;
 	private static boolean ServerIPConnectIsShow = false;
 
 	static {
 		Properties prop = new Properties();
-		String configPath = Paths.get(System.getProperty("user.dir"), "application.properties").toString();
-		try (InputStream input = new FileInputStream(configPath)) {
-			prop.load(input);
-			serverIp = prop.getProperty("server.simulator.host", DEFAULT_SERVERIP);
-			serverPort = Integer.parseInt(prop.getProperty("server.simulator.port", String.valueOf(DEFAULT_PORT)));
+		try (InputStream input = CsvSimulatorProtocolProxy.class.getClassLoader().getResourceAsStream("testingapp.properties")) {
+			if (input != null) {
+				prop.load(input);
+				serverIp = prop.getProperty("server.host", DEFAULT_SERVERIP);
+				serverPort = Integer.parseInt(prop.getProperty("server.port", String.valueOf(DEFAULT_PORT)));
+			} else {
+				serverIp = DEFAULT_SERVERIP;
+				serverPort = DEFAULT_PORT;
+			}
 		} catch (Exception e) {
 			serverIp = DEFAULT_SERVERIP;
 			serverPort = DEFAULT_PORT;
