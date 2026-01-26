@@ -2,7 +2,7 @@
 
 ## Overview
 
-![System Servers-Clients Architecture Diagram](system_architecture_servers-clients.svg)
+![System Servers-Clients Architecture Diagram](distributed_system_architecture.svg)
 
 The diagram above reflects the actual implemented architecture, including all flows and responsibilities of the servers and clients.
 
@@ -38,7 +38,7 @@ The system is composed of multiple networked components, each with well-defined 
   - Is a client application, not a server.
   - Implemented in Java.
 
-- **[Simulator Server](Servers/simulator_server/Simulator.md)**
+- **[Simulator Server](servers/simulator_server/Simulator.md)**
   - Simulates the behavior of drones and the execution of shows.
   - Accepts connections from:
     - Testing App (for simulation/test requests)

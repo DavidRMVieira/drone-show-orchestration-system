@@ -34,20 +34,6 @@ This system aims to prepare Shodrone for large, highly customized drone shows, p
 | 1230543 | Igor Coutinho  |
 | 1211252 | Rui Vieira     |
 
-### 1.4 User stories
-
-- ##### Sprint 1:
-
-| ID     | Priority   | Estimated Time  | Description                                                                                                                                             |
-|--------|------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| US101  | Medium     | 6 hours         | As Project Manager, I want the team to follow the technical constraints and concerns of the project.                                                    |
-| US102  | High       | 1 hours         | As Project Manager, I want the team to use the defined project repository in GitHub and setup a GitHub tool for project management.                     |
-| US103  | Medium     | 3 hours         | As Project Manager, I want the team to configure the project structure to facilitate/accelerate the development of upcoming user stories.               |
-| US104  | Medium     | 5 hours         | As Project Manager, I want the team to setup a continuous integration server.                                                                           |
-| US105  | Medium     | 3 hours         | As Project Manager, I want the team to add to the project the necessary scripts, so that build/executions/deployments/... can be executed effortlessly. |
-| US110  | Medium     | 10 hours        | As Project Manager, I want the team to elaborate a Domain Model using DDD.                                                                              |
-
----
 
 ## 2. Technical Documentation
 
@@ -60,9 +46,9 @@ The application follows a typical layered approach
                       |     |
                       +-> Repositories
 
-### 2.2 System Layer Communication
+### 2.2 System Internal Layer Communication
 
-![System Layer Architecture](system_architecture/system-layer-architecture.svg)
+![System Internal Layer Architecture](system_architecture/system-internal-layer-architecture.svg)
 
 ### 2.3 Technologies Used
 - **Programming Languages**: Java, C and ANTLR
@@ -75,18 +61,16 @@ The application follows a typical layered approach
 ![Domain Model](domain_model/domain-model.svg)
 
 
-
-
 ### 2.5 Distributed System Architecture & Protocols
 
-![System Servers-Clients Architecture Diagram](servers-clients/system_architecture_servers-clients.svg)
+![System Servers-Clients Architecture Diagram](servers-clients/distributed_system_architecture.svg)
 
 #### 2.5.1. Servers and Clients Overview
 For a detailed description of the networked components, their roles, and communication flows, see:
-**[Servers and Clients Architecture](servers-clients/system_architecture_servers-clients.md)**
+**[Servers and Clients Architecture](servers-clients/distributed_system_architecture.md)**
 
 #### 2.5.2. Communication Protocols
-- Customer App Server (CAS) protocol: [servers/customer_app_server/CAS.md](servers/customer_app_server/CAS.md)
-- Simulator Server protocol: [servers/simulator_server/Simulator.md](servers/simulator_server/Simulator.md)
+- Customer App Server (CAS) protocol: [more](servers-clients/servers/customer_app_server/CAS.md)
+- Simulator Server protocol: [more](servers-clients/servers/simulator_server/Simulator.md)
 
 ---
