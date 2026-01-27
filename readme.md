@@ -6,19 +6,16 @@
 
 ```
 ⚠️ This repository was created as part of the Integrative Project in the 3rd semester of the Bachelor’s Degree in Informatics Engineering at ISEP, and was therefore developed as a group project.
+
+Team Memberss / Credits:
+  - David Vieira
+  - Daniel Silva
+  - Rafael Barbosa
+  - Igor Coutinho
+  - Rui Vieira
 ```
 
 <br>
-
-
----
-
-## 👥 Team Members
-- David Vieira
-- Daniel Silva
-- Rafael Barbosa
-- Igor Coutinho
-- Rui Vieira
 
 ---
 
@@ -28,6 +25,7 @@
 
 - *The system can be run using servers created locally or deployed on the DEI (Departamento de Engenharia Informática, ISEP) infrastructure. The DEI servers provide virtualized computing, storage, and networking resources (VS-Cloud), accessible via VPN and supporting remote management, SSH/SMB/CIFS storage, and web hosting. This flexibility allows the platform to be used for both local development and production-like deployments on institutional infrastructure.*
 
+---
 
 ## 2. 📚 Planning and Technical Documentation
 
