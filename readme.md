@@ -30,7 +30,7 @@ Team Memberss / Credits:
 ## 2. 📚 Planning and Technical Documentation
 
 📄 **Detailed documentation:**  
-- [Planning and Technical Documentation](docs/readme.md)
+- [Planning and Technical Documentation](docs/planning_technical_documentation.md)
 
 ---
 
